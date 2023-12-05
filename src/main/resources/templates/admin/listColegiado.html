@@ -1,0 +1,59 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}"
+    th:with="titulo='Colegiados'">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <title>Admin</title>
+
+</head>
+<body>
+
+  <div layout:fragment="content">
+  <div class="container">
+    <form th:action="@{/admin/colegiados/cadastro}" method="GET">
+        <button class="btn btn-primary" type="submit">Novo</button>
+    </form>
+
+    <div id="main">
+        <div>
+          <h2>COLEGIADO</h2>
+          <table class="table" id="tabela">
+            <thead>
+              <tr>
+                <th>Curso</th>
+                <th>Portaria</th>
+                <th>Alterar</th>
+                <th>Excluir</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="colegiado : ${colegiados}">
+                <td th:text="${colegiado.curso}">Sistemas para Internet</td>
+                <th th:text="${colegiado.portaria}">111111111</th>
+                <td>
+                    <a th:href="@{/admin/colegiados/{id}(id=${colegiado.id})}" class="btn btn-warning" data-id="[[${colegiado.id}]]">
+                        <i class="fad fa-pencil-square-o"></i>
+                    </a>
+                </td>
+                <td>
+                  <form th:action="@{/admin/colegiados/{id}/delete(id=${colegiado.id})}">
+                      <button class="btn btn-primary btn-sm" type="submit">Excluir</button>
+                  </form>
+              </td>
+            </tr>
+          
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>
