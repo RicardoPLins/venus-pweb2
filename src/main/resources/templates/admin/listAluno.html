@@ -9,8 +9,18 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/js/all.min.js"></script>
+        <script>
+            function deletarAluno(id) {
+        console.log(`${window.location.href}/${id}`);
+        fetch(`${window.location.href}/${id}` , {
+            method: 'DELETE',
+        })
+            .then(() => {
+                window.location.reload();
+            })
+    }
+        </script>
     </head>
-
 
 
 <body>
@@ -35,6 +45,7 @@
                         <th>Nome</th>
                         <th>Fone</th>
                         <th>Matricula</th>
+                        <th>Curso</th>
                         <th>Login</th>
                         <th>Alterar</th>
                         <th>Delete</th>
@@ -43,21 +54,24 @@
                 <tbody>
                     <tr th:each="aluno : ${alunos}">
                         <td>[[${aluno.id}]]</td>
-                        <td>[[${aluno.nome}]]</td>
+                        <td><a th:href="@{/admin/alunos/{id}(id=${aluno.id})}" th:text="${aluno.nome}"></a>
+                        </td>
                         <td>[[${aluno.fone}]]</td>
                         <td>[[${aluno.matricula}]]</td>
+                        <td th:text="${aluno.curso.nome}"></td>
                         <td>[[${aluno.login}]]</td>
-                        
                         <td>
                             <a th:href="@{/admin/alunos/{id}(id=${aluno.id})}" class="btn btn-warning" data-id="[[${aluno.id}]]">
                                 <i class="fas fa-pencil-square-o"></i>
                             </a>
                         </td>
+
                         <td>
-                            <form th:action="@{/admin/alunos/{id}/delete(id=${aluno.id})}">
-                                <button class="btn btn-primary btn-sm" type="submit">Excluir</button>
-                            </form>
+                            <button class="btn btn-danger delete-button" data-id="[[${aluno.id}]]" th:onclick="|deletarAluno(${aluno.id})|">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </td>
+                            
                     </tr>
                 </tbody>
             </table>

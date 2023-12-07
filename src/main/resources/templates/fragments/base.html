@@ -23,10 +23,9 @@
         <div class="navbar-nav">
             <a th:classappend="${menu == 'home'} ? 'active'" class="nav-item nav-link" th:href="@{/home}">Home</a>
             <a th:classappend="${menu == 'processos'} ? 'active'" class="nav-item nav-link" th:href="@{/alunos/processos}">Processos</a>
-            <a th:classappend="${menu == 'professores'} ? 'active'" class="nav-item nav-link" th:href="@{/admin/professores}">Professores</a>
-            <a th:classappend="${menu == 'colegiados'} ? 'active'" class="nav-item nav-link" th:href="@{/admin/colegiados}">Colegiados</a>
-            <a th:classappend="${menu == 'assuntos'} ? 'active'" class="nav-item nav-link" th:href="@{/admin/assuntos}">Assuntos</a>
-            <a th:classappend="${menu == 'alunos'} ? 'active'" class="nav-item nav-link" th:href="@{/admin/alunos}">Alunos</a>
+            <a th:classappend="${menu == 'reuniões'} ? 'active'" class="nav-item nav-link" th:href="@{/reunioes}">Reuniões</a>
+            <a sec:authorize="hasRole('ADMIN')" th:classappend="${menu == 'colegiados'} ? 'active'" class="nav-item nav-link" th:href="@{/colegiados}">Colegiados</a>
+            <a sec:authorize="hasRole('ADMIN')" th:classappend="${menu == 'usuarios'} ? 'active'" class="nav-item nav-link" th:href="@{/admin/usuarios}">CRUDS</a>
 
         </div>
         <form class="form-inline my-2 my-lg-0" th:action="@{/auth/logout}" method="POST">

@@ -1,5 +1,6 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}"
-    th:with="titulo='Colegiados'">
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}" th:with="titulo='Cadastro de Colegiado'">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +16,6 @@
 <body>
 
   <div layout:fragment="content">
-  <div class="container">
     <form th:action="@{/admin/colegiados/cadastro}" method="GET">
         <button class="btn btn-primary" type="submit">Novo</button>
     </form>
@@ -42,10 +42,11 @@
                     </a>
                 </td>
                 <td>
-                  <form th:action="@{/admin/colegiados/{id}/delete(id=${colegiado.id})}">
-                      <button class="btn btn-primary btn-sm" type="submit">Excluir</button>
-                  </form>
+                  <button class="btn btn-danger" data-id="[[${colegiado.id}]]" th:onclick="|deletar(${colegiado.id})|">
+                      <i class="fas fa-trash"></i>
+                  </button>
               </td>
+              
             </tr>
           
               </tr>
@@ -54,6 +55,18 @@
         </div>
     </div>
   </div>
-</div>
+  <script>
+    function deletar(colegiadoId) {
+        console.log(`${window.location.href}/${colegiadoId}`);
+        fetch(`${window.location.href}/${colegiadoId}` , {
+            method: 'DELETE',
+        })
+            .then(() => {
+                window.location.reload();
+            })
+    }
+
+</script>
+
 </body>
 </html>

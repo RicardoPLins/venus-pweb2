@@ -38,15 +38,27 @@
                         <td><a th:href="@{/admin/assuntos/{id}(id=${assunto.id})}" th:text="${assunto.nome}"></a>
                         </td>
                         <td>
-                            <form th:action="@{/admin/assuntos/{id}/delete(id=${assunto.id})}">
-                                <button class="btn btn-primary btn-sm" type="submit">Excluir</button>
-                            </form>
+                            <button class="btn btn-danger delete-button" data-id="[[${assunto.id}]]" th:onclick="|deletar(${assunto.id})|">
+                                <i class="fas fa-trash"></i>
+                            </button>
                         </td>
+
                     </tr>
                 </tbody>
             </table>
         </div>
     </div>
+    <script>
+        function deletar(id) {
+            console.log(`${window.location.href}/${id}`);
+            fetch(`${window.location.href}/${id}` , {
+                method: 'DELETE',
+            })
+                .then(() => {
+                    window.location.reload();
+                })
+        }
+    
     </script>
 </body>
 
