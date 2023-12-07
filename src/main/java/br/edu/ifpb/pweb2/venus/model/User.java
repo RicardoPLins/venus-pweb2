@@ -23,7 +23,16 @@ public class User {
 private String username;
 private String password;
 private Boolean enabled;
+
 @OneToMany(mappedBy = "username")
 @ToString.Exclude
 List<Authority> authorities;
+
+public User (String username, String password) {
+    this.username = username;
+    this.password = password;
+}
+
+public void addAuthority(String string) {
+}
 }

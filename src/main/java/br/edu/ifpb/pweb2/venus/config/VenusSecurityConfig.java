@@ -29,12 +29,14 @@ public class VenusSecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**", "/js/**", "/img/**").permitAll()
+                        .requestMatchers("/alunos/**").hasAnyRole("ADMIN", "ALUNO")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .formLogin((form) -> form
                         .loginPage("/auth/login")
                         .defaultSuccessUrl("/home", true)
                         .permitAll())
-                .logout((logout) -> logout.logoutUrl("auth/logout"));
+                .logout((logout) -> logout.logoutUrl("/auth/logout"));
                 return http.build();
     }
 
@@ -45,14 +47,18 @@ public class VenusSecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        UserDetails admin = User.withUsername("admin")
-                .password(passwordEncoder().encode("admin"))
-                .roles("ADMIN")
-                .build();
+        UserDetails admin = User.withUsername("admin").password(passwordEncoder().encode("admin")).roles("ADMIN")
+        .build();
+        UserDetails aluno = User.withUsername("aluno").password(passwordEncoder().encode("aluno")).roles("ALUNO")
+        .build();
+        UserDetails professor = User.withUsername("professor").password(passwordEncoder().encode("professor")).roles("PROFESSOR")
+        .build();
 
         JdbcUserDetailsManager users = new JdbcUserDetailsManager(dataSource);
         if (!users.userExists(admin.getUsername())) {
             users.createUser(admin);
+            users.createUser(aluno);
+            users.createUser(professor);
         }
         return users;
     }

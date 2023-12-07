@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.venus.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.edu.ifpb.pweb2.venus.model.Aluno;
 import br.edu.ifpb.pweb2.venus.model.Assunto;
 import br.edu.ifpb.pweb2.venus.model.Processo;
+import br.edu.ifpb.pweb2.venus.model.StatusEnum;
+import br.edu.ifpb.pweb2.venus.repository.AlunoRepository;
 import br.edu.ifpb.pweb2.venus.repository.AssuntoRepository;
 import br.edu.ifpb.pweb2.venus.repository.ProcessoRepository;
 
@@ -21,16 +25,32 @@ public class AlunoService {
     @Autowired
     private AssuntoRepository assuntoRepository;
 
+    @Autowired
+    private AlunoRepository alunoRepository;
+
     @Transactional
     public void removerProcesso(Integer id) {
         processoRepository.deleteById(id);
     }
 
     @Transactional
-    public void saveProcesso(Processo processo) {
+    public void saveProcesso(Processo processo, String nome) {
+        Aluno aluno = alunoRepository.findByNome(nome).get();
+        aluno.adicionarProcesso(processo);
+
         Assunto assunto = assuntoRepository.findById(processo.getAssunto().getId()).get();
         processo.setAssunto(assunto);
+
+        Date dataRecepcao = new Date();
+        processo.setStatus(StatusEnum.CRIADO);
+        processo.setTipoDecisao(null);
+        processo.setParticipante(aluno);
+
+        processo.setCurso(aluno.getCurso());
+        processo.setDataRecepcao(dataRecepcao);
+        
         processoRepository.save(processo);
+        
     }
 
     public List<Processo> listProcesso() {
@@ -43,6 +63,10 @@ public class AlunoService {
 
     public Optional<Processo> getProcesso(Integer id) {
         return processoRepository.findById(id);
+    }
+
+    public Aluno getAluno(Integer id) {
+        return alunoRepository.findById(id).get();
     }
 
 }

@@ -18,26 +18,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Professor {
-
-    @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Integer id;
-
-    @NotBlank(message = "Campo obrigatório")
-    private String nome;
-
-    @NotBlank(message = "Campo obrigatório")
-    private String fone;
-
-    @NotBlank(message = "Campo obrigatório")
-    private String matricula;
-
-    @NotBlank(message = "Campo obrigatório")
-    private String login;
-
-    @NotBlank(message = "Campo obrigatório")
-    private String senha;
+public class Professor extends Usuario{
     
     private Boolean coordenador;
 
