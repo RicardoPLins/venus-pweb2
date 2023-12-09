@@ -10,5 +10,7 @@ import br.edu.ifpb.pweb2.venus.model.Processo;
 @Repository
 public interface ProcessoRepository extends JpaRepository<Processo, Integer>{
 
+    public List<Processo> findAllByParticipanteLogin(String login);
+
 
 }

@@ -36,7 +36,7 @@ public class Usuario {
     private String matricula;
     
     @NotBlank(message="Campo obrigatório")
-    @Email(message = "email inválido")
+    // @Email(message = "email inválido")
     private String login;
 
     @NotBlank(message="Campo obrigatório")
@@ -52,13 +52,13 @@ public class Usuario {
     @JoinColumn(name="curso_id")
     private Curso curso;
 
-    @OneToOne
-    @JoinColumn(name = "id_aluno")
-    private Aluno aluno;
+    // @OneToOne
+    // @JoinColumn(name = "id_aluno")
+    // private Aluno aluno;
 
 
-    public Usuario(Aluno aluno) {
-        this.aluno = aluno;
-    }
+    // public Usuario(Aluno aluno) {
+    //     this.aluno = aluno;
+    // }
 
 }

@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.venus.service;
 
+import java.security.Principal;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -34,8 +35,8 @@ public class AlunoService {
     }
 
     @Transactional
-    public void saveProcesso(Processo processo, String nome) {
-        Aluno aluno = alunoRepository.findByNome(nome).get();
+    public void saveProcesso(Processo processo, String login) {
+        Aluno aluno = alunoRepository.findByLogin(login);
         aluno.adicionarProcesso(processo);
 
         Assunto assunto = assuntoRepository.findById(processo.getAssunto().getId()).get();
@@ -67,6 +68,10 @@ public class AlunoService {
 
     public Aluno getAluno(Integer id) {
         return alunoRepository.findById(id).get();
+    }
+
+    public List<Processo> consultaProcessos(Principal user){
+        return processoRepository.findAllByParticipanteLogin(user.getName());
     }
 
 }

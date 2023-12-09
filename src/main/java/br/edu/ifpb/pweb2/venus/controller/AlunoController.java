@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.venus.controller;
 
+import java.security.Principal;
 import java.security.Security;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class AlunoController {
     }
 
     @PostMapping("/processos")
-    public ModelAndView saveAluno(@Valid Processo processo, BindingResult result, ModelAndView mav) {
+    public ModelAndView saveAluno(@Valid Processo processo, Principal principal, BindingResult result, ModelAndView mav) {
         if (result.hasErrors()) {
             mav.setViewName("alunos/formProcesso");
             mav.addObject("processo", processo);
@@ -65,6 +66,7 @@ public class AlunoController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         UserDetails userDetails = (UserDetails) authentication.getPrincipal();
         String username = userDetails.getUsername();
+        System.out.println("username: "+ principal);
         alunoService.saveProcesso(processo, username);
         mav.setViewName("redirect:/alunos/processos");
         mav.addObject("processos", alunoService.listProcesso());

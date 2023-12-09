@@ -2,6 +2,7 @@ package br.edu.ifpb.pweb2.venus.model;
 
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
@@ -24,7 +25,7 @@ private String username;
 private String password;
 private Boolean enabled;
 
-@OneToMany(mappedBy = "username")
+@OneToMany(mappedBy = "username", cascade = CascadeType.ALL)
 @ToString.Exclude
 List<Authority> authorities;
 

@@ -3,6 +3,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -58,17 +59,14 @@ public class AdminService {
         PasswordEncoder hash = new BCryptPasswordEncoder();
         if (aluno.getId() == null) {
         // Novo registro de estudante
-        String passwordEncrypt = hash.encode((CharSequence)aluno.getSenha());
-        User user = new User(aluno.getLogin(), passwordEncrypt);
+        String senhaCriptograda = hash.encode((CharSequence)aluno.getSenha());
+        aluno.setSenha(senhaCriptograda);
+        User user = new User(aluno.getLogin(), senhaCriptograda);
         user.setAuthorities(Collections.singletonList(new Authority(user, "ROLE_ALUNO")));
         user.setEnabled(true);
         aluno.setUser(user);
         alunoRepository.save(aluno);
     }
-    else {  
-        System.err.println("Aluno já existe");
-    }	
-
     }
 
     // @Transactional
