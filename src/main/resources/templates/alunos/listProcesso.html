@@ -40,7 +40,6 @@
                         <th>Data de Recepção</th>
                         <th>Data de Distribuição</th>
                         <th>Data de Parecer</th>
-                        <th>Decisão do Relator</th>
                         <th>Texto Requerimento</th>
                         <th>Assunto</th>
                         <th>Delete</th>
@@ -54,7 +53,6 @@
                         <td>[[${#dates.format(processo.dataRecepcao, 'dd-MM-yyyy')}]]</td>
                         <td>[[${#dates.format(processo.dataDistribuicao, 'dd-MM-yyyy')}]]</td>
                         <td>[[${#dates.format(processo.dataParecer, 'dd-MM-yyyy')}]]</td>
-                        <td>[[${processo.decisaoRelator}]]</td>
                         <td>[[${processo.texto}]]</td>
                         <td><a th:text="${processo.assunto.nome}"></a></td>
                         <td>
