@@ -70,8 +70,12 @@ public class AlunoService {
         return alunoRepository.findById(id).get();
     }
 
-    public List<Processo> consultaProcessos(Principal user){
+    public List<Processo> consultarProcessos(Principal user){
         return processoRepository.findAllByParticipanteLogin(user.getName());
+    }
+
+    public List<Processo> filtroProcessos(Principal principal, String filtro, String ordem) {
+        return null;
     }
 
 }
