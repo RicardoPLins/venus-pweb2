@@ -23,6 +23,26 @@
 
 <body>
     <div layout:fragment="content">
+        <form th:action="@{/alunos/processos/consultar}" method="GET">
+            <label for="status">Filtrar por Status:</label>
+            <select id="status" name="status">
+                <option th:each="status : ${statusItens}" th:value="${status}" th:text="${status.getStatus()}">
+            </select>
+        
+            <label for="assunto">Filtrar por Assunto:</label>
+            <select id="assunto" name="assunto">
+                <option th:each="assunto : ${assuntoItens}" th:value="${assunto.id}" th:text="${assunto.nome}">
+                </option>
+            </select>
+        
+            <label for="ordenacao">Ordenar por Data de Criação:</label>
+            <select id="ordenacao" name="ordenacao">
+                <option value="asc">Ascendente</option>
+                <option value="desc">Descendente</option>
+            </select>
+        
+            <button type="submit" class="btn btn-primary">Aplicar Filtros</button>
+        </form> 
         <form th:action="@{/alunos/processos/cadastro}" method="GET">
             <button class="btn btn-primary" type="submit">Novo</button>
         </form>
@@ -40,6 +60,7 @@
                         <th>Data de Recepção</th>
                         <th>Data de Distribuição</th>
                         <th>Data de Parecer</th>
+                        <th>Status</th>
                         <th>Texto Requerimento</th>
                         <th>Assunto</th>
                         <th>Delete</th>
@@ -53,6 +74,7 @@
                         <td>[[${#dates.format(processo.dataRecepcao, 'dd-MM-yyyy')}]]</td>
                         <td>[[${#dates.format(processo.dataDistribuicao, 'dd-MM-yyyy')}]]</td>
                         <td>[[${#dates.format(processo.dataParecer, 'dd-MM-yyyy')}]]</td>
+                        <td>[[${processo.status}]]</td>
                         <td>[[${processo.texto}]]</td>
                         <td><a th:text="${processo.assunto.nome}"></a></td>
                         <td>
