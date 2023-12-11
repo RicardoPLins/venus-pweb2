@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import br.edu.ifpb.pweb2.venus.model.Aluno;
@@ -36,10 +37,9 @@ public class AlunoController {
     private AlunoService alunoService;
 
     @GetMapping("/processos")
-    public ModelAndView getAlunos(ModelAndView mav, HttpSession session) {
-        // Professor professor = (Professor) session.getAttribute("professor");
+    public ModelAndView getProcessos(ModelAndView mav, Principal principal) {
         mav.setViewName("alunos/listProcesso");
-        mav.addObject("processos", alunoService.listProcesso());
+        mav.addObject("processos", alunoService.consultarProcessos(principal));
         return mav;
     }
 
@@ -78,6 +78,13 @@ public class AlunoController {
         mav.setViewName("alunos/formProcesso");
         mav.addObject("processo", alunoService.getProcesso(id));
         return mav;
+    }
+
+    @GetMapping("/processo/consultar")
+    public ModelAndView filtrarProcesso(@RequestParam(name = "status", defaultValue = "") String filtro, @RequestParam(name = "ordem", defaultValue = "") String ordem, ModelAndView modelAndView, Principal principal) {
+        modelAndView.addObject("processos", alunoService.filtroProcessos(principal, filtro, ordem));
+        modelAndView.setViewName("/aluno/listProcesso");
+        return modelAndView;
     }
 
     // @DeleteMapping("/processos/{id}")
