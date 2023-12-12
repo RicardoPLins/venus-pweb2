@@ -1,8 +1,14 @@
 package br.edu.ifpb.pweb2.venus.controller;
 
+import java.security.Principal;
+import java.security.Security;
 import java.util.List;
 
+import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,9 +19,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import br.edu.ifpb.pweb2.venus.model.Aluno;
 import br.edu.ifpb.pweb2.venus.model.Assunto;
 import br.edu.ifpb.pweb2.venus.model.Processo;
 import br.edu.ifpb.pweb2.venus.model.Professor;
+import br.edu.ifpb.pweb2.venus.model.Usuario;
 import br.edu.ifpb.pweb2.venus.service.AlunoService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -48,14 +56,18 @@ public class AlunoController {
     }
 
     @PostMapping("/processos")
-    public ModelAndView saveAluno(@Valid Processo processo, BindingResult result, ModelAndView mav, HttpSession session) {
+    public ModelAndView saveAluno(@Valid Processo processo, Principal principal, BindingResult result, ModelAndView mav) {
         if (result.hasErrors()) {
             mav.setViewName("alunos/formProcesso");
             mav.addObject("processo", processo);
             return mav;
         }
         processo.setNumero("" + System.currentTimeMillis());
-        alunoService.saveProcesso(processo);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String username = userDetails.getUsername();
+        System.out.println("username: "+ principal);
+        alunoService.saveProcesso(processo, username);
         mav.setViewName("redirect:/alunos/processos");
         mav.addObject("processos", alunoService.listProcesso());
         return mav;

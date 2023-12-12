@@ -1,11 +1,13 @@
 package br.edu.ifpb.pweb2.venus.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,23 +19,37 @@ import br.edu.ifpb.pweb2.venus.model.Assunto;
 import br.edu.ifpb.pweb2.venus.model.Colegiado;
 import br.edu.ifpb.pweb2.venus.model.Curso;
 import br.edu.ifpb.pweb2.venus.model.Professor;
+import br.edu.ifpb.pweb2.venus.model.User;
+import br.edu.ifpb.pweb2.venus.repository.UserRepository;
 import br.edu.ifpb.pweb2.venus.service.AdminService;
 import jakarta.validation.Valid;
 
 
 @Controller
 @RequestMapping("/admin")
-@PreAuthorize("hasAnyRole('ADMIN')")
 public class AdminController {
     @Autowired
     private AdminService adminService;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/home")
     public String showHomePage() {
         return "admin/home";
     }
 
+    @GetMapping("/usuarios")
+    public ModelAndView getUsuarios(ModelAndView mav) {
+        mav.setViewName("admin/listUsuario");
+        return mav;
+    }
 
+    @ModelAttribute("users")
+    public List<User> getUserOptions(){
+        return userRepository.findByEnabledTrue();
+    }
+    
     @GetMapping("/alunos")
     public ModelAndView getAlunos(ModelAndView mav) {
         mav.setViewName("admin/listAluno");
@@ -62,14 +78,14 @@ public class AdminController {
     }
 
     @GetMapping("/alunos/{id}")
-    public ModelAndView editAluno(@PathVariable(value = "id") Long id, ModelAndView mav) {
+    public ModelAndView editAluno(@PathVariable(value = "id") Integer id, ModelAndView mav) {
         mav.setViewName("admin/formAluno");
         mav.addObject("aluno", adminService.getAluno(id));
         return mav;
     }
 
     @GetMapping("/alunos/{id}/delete")
-    public ModelAndView deleteById(@PathVariable(value = "id") Long id, ModelAndView mav
+    public ModelAndView deleteById(@PathVariable(value = "id") Integer id, ModelAndView mav
     , RedirectAttributes attr) {
         adminService.removerAluno(id);
         attr.addFlashAttribute("mensagem", "Aluno removido com sucesso!");
@@ -188,47 +204,58 @@ public class AdminController {
 
     }
 
-    // @GetMapping("/cursos")
-    // public ModelAndView getCursos(ModelAndView mav) {
-    //     mav.setViewName("admin/listCurso");
-    //     mav.addObject("cursos", adminService.listarCursos());
-    //     return mav;
-    // }
+    @GetMapping("/cursos")
+    public ModelAndView getCursos(ModelAndView mav) {
+        mav.setViewName("admin/listCurso");
+        mav.addObject("cursos", adminService.listarCursos());
+        return mav;
+    }
 
-    // @GetMapping("/cursos/cadastro")
-    // public ModelAndView getCadastro(ModelAndView mav) {
-    //     mav.setViewName("admin/formCurso");
-    //     mav.addObject("curso", new Curso());
-    //     return mav;
-    // }
+    @GetMapping("/cursos/cadastro")
+    public ModelAndView getCadastro(ModelAndView mav) {
+        mav.setViewName("admin/formCurso");
+        mav.addObject("curso", new Curso());
+        return mav;
+    }
 
-    // @GetMapping("/cursos/{id}")
-    // public ModelAndView editCurso(@PathVariable(value = "id") Long id, ModelAndView mav) {
-    //     mav.setViewName("admin/formCurso");
-    //     mav.addObject("curso", adminService.getCurso(id));
-    //     return mav;
-    // }
+    @GetMapping("/cursos/{id}")
+    public ModelAndView editCurso(@PathVariable(value = "id") Integer id, ModelAndView mav) {
+        mav.setViewName("admin/formCurso");
+        mav.addObject("curso", adminService.getCurso(id));
+        return mav;
+    }
     
-    // @PostMapping("/cursos")
-    // public ModelAndView saveCurso(@Valid Curso curso, BindingResult result, ModelAndView mav) {
-    //     if (result.hasErrors()){
-    //         mav.addObject("curso", curso);
-    //         mav.setViewName("/admin/formCurso");
-    //         return mav;
-    //     }
-    //     adminService.salvarCurso(curso);
-    //     mav.setViewName("redirect:/admin/cursos");
-    //     mav.addObject("cursos", adminService.listarCursos());
-    //     return mav;
-    // }
+    @PostMapping("/cursos")
+    public ModelAndView saveCurso(@Valid Curso curso, BindingResult result, ModelAndView mav) {
+        if (result.hasErrors()){
+            mav.addObject("curso", curso);
+            mav.setViewName("/admin/formCurso");
+            return mav;
+        }
+        adminService.salvarCurso(curso);
+        mav.setViewName("redirect:/admin/cursos");
+        mav.addObject("cursos", adminService.listarCursos());
+        return mav;
+    }
 
-    // @DeleteMapping("/cursos/{id}")
-    // public ModelAndView deleteCurso(@PathVariable(value = "id") Long id, ModelAndView mav) {
-    //     adminService.removerCurso(id);
-    //     mav.setViewName("redirect:/admin/cursos");
-    //     mav.addObject("cursos", adminService.listarCursos());
-    //     return mav;
-    // }
+    @GetMapping("/cursos/{id}/delete")
+    public ModelAndView deleteCurso(@PathVariable(value = "id") Integer id,
+     ModelAndView mav, RedirectAttributes attr) {
+        adminService.removerCurso(id);
+        attr.addFlashAttribute("mensagem", "Curso removido com sucesso!");
+        mav.setViewName("redirect:/admin/cursos");
+        return mav;
+    }
+
+    @ModelAttribute("cursoItems")
+    public List<Curso> getCursos() {
+        return adminService.listarCursos();
+    }
+
+    @ModelAttribute("professoresMembros")
+    public List<Professor> getProfessores() {
+        return adminService.listarProfessores();
+    }
 
     @GetMapping("/assuntos")
     public ModelAndView getAssuntos(ModelAndView mav) {
@@ -266,11 +293,11 @@ public class AdminController {
 
 
     @GetMapping("/assuntos/{id}/delete")
-    public ModelAndView deleteAssunto(@PathVariable(value = "id") Integer id, 
-    ModelAndView mav, RedirectAttributes attr) {
-        adminService.removerAssunto(id);
+    public ModelAndView deleteAssunto(@PathVariable(value = "id") Integer id,
+     ModelAndView mav, RedirectAttributes attr) {
+        adminService.removerProfessor(id);
         attr.addFlashAttribute("mensagem", "Assunto removido com sucesso!");
-        mav.setViewName("redirect:/admin/assuntos");        
+        mav.setViewName("redirect:/admin/assuntos");
         return mav;
     }
 
