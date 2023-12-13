@@ -23,10 +23,23 @@
 
 <body>
     <div layout:fragment="content">
-        <form th:action="@{/alunos/processos/cadastro}" method="GET">
-            <button class="btn btn-primary" type="submit">Novo</button>
+        <form th:action="@{/alunos/processos/qm}" method="GET">
+            <select name="tipo">
+                <option value="findByAssunto">Consultar por Assunto</option>
+                <!-- <option value="findByStatus">Consultar por Status</option> -->
+            </select>
+            <!-- Campos para inserir informações da consulta -->
+            <!-- Por exemplo, para "findByAssunto" você pode ter um campo para o ID do assunto -->
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="assunto">Assunto:</label>
+                <select name="assuntoId" class="form-select mb-2">
+                    <option th:each="assunto : ${assuntoItems}" th:value="${assunto.id}" th:text="${assunto.nome}"></option>
+                </select>
+            </div>
+            <!-- Para "findByStatus" você pode ter um campo para o status -->
+            <!-- <input type="text" name="status" placeholder="Status"> -->
+            <button type="submit">Consultar</button>
         </form>
-        <br />
 
         <div th:if="${not #lists.isEmpty(processos)}">
             <div th:text="'Total ' + ${#lists.size(processos)} + ' processos'"

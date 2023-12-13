@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.edu.ifpb.pweb2.venus.model.Curso;
 import br.edu.ifpb.pweb2.venus.model.Processo;
@@ -32,14 +33,17 @@ public class ProfessorController {
     
 
     @PostMapping("/processos")
-    public ModelAndView saveProfessor(@Valid Processo processo, BindingResult result, ModelAndView mav){
+    public ModelAndView saveProfessor(@Valid Processo processo, BindingResult result, ModelAndView mav,
+    RedirectAttributes attr){
         if (result.hasErrors()){
             mav.setViewName("professores/formProcessoProf");
             mav.addObject("processo", processo);
             return mav;
         }
         professorService.vote(processo);
+        attr.addFlashAttribute("mensagem", "Voto feito com sucesso!");
         mav.setViewName("redirect:/professores/processos");
+        // mav.setViewName("redirect:professores/listProcessosProf");
         mav.addObject("processos", professorService.listProcessos());
         return mav;
     }
@@ -53,7 +57,8 @@ public class ProfessorController {
     }
 
     @GetMapping("/processos/{id}")
-    public ModelAndView editAluno(@PathVariable(value = "id") Integer id, ModelAndView mav) {
+    public ModelAndView editProfessor(@PathVariable(value = "id") Integer id, ModelAndView mav, RedirectAttributes attr) {
+        attr.addFlashAttribute("mensagem", "Voto feito com sucesso!");
         mav.setViewName("professores/formProcessoProf");
         mav.addObject("processo", professorService.getProcesso(id));
         return mav;
@@ -73,7 +78,8 @@ public class ProfessorController {
     public ModelAndView processoVotar(Processo processo,ModelAndView mav) {
         professorService.vote(processo);
         mav.addObject("processo", new Processo());
-        mav.setViewName("redirect:/professores/processos");
+        // mav.setViewName("redirect:/professores/processos");
+        mav.setViewName("professores/listProcessosProf");
         return mav;
     }
 
