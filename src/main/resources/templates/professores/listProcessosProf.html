@@ -14,9 +14,6 @@
 <body>
     <div layout:fragment="content">
         <div class="header">
-            <div class="icon">
-                <a th:href="@{/professores/processos/cadastro}"><i class="fas fa-arrow-left"></i>Novo</a>
-            </div>
             <h1>Processos</h1>
         </div>
 
@@ -25,7 +22,7 @@
                 <thead>
                     <tr>
                         <th>Numero</th>
-                        <th>Editar</th>
+                        <th>Votar</th>
                         <th>Assunto</th>
                         <th>Voto</th>
                         <th>Justificativa</th>
@@ -37,7 +34,7 @@
                         <td th:text="${processo.numero}"></td>
                         <td>
                             <a th:href="@{/professores/processos/{id}(id=${processo.id})}" class="btn btn-primary edit-button" data-id="[[${processo.id}]]">
-                                <i class="fas fa-edit"></i> Editar
+                                <i class="fas fa-edit"></i> Votar
                             </a>
                         </td>
                         <td th:text="${processo.assunto.nome}"></td>

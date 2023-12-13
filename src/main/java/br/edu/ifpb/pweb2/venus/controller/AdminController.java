@@ -20,6 +20,7 @@ import br.edu.ifpb.pweb2.venus.model.Colegiado;
 import br.edu.ifpb.pweb2.venus.model.Curso;
 import br.edu.ifpb.pweb2.venus.model.Professor;
 import br.edu.ifpb.pweb2.venus.model.User;
+import br.edu.ifpb.pweb2.venus.model.Voto;
 import br.edu.ifpb.pweb2.venus.repository.UserRepository;
 import br.edu.ifpb.pweb2.venus.service.AdminService;
 import jakarta.validation.Valid;
@@ -298,6 +299,48 @@ public class AdminController {
         adminService.removerProfessor(id);
         attr.addFlashAttribute("mensagem", "Assunto removido com sucesso!");
         mav.setViewName("redirect:/admin/assuntos");
+        return mav;
+    }
+
+    @GetMapping("/votos")
+    public ModelAndView getVotos(ModelAndView mav) {
+        mav.setViewName("admin/listVoto");
+        mav.addObject("votos", adminService.listVotos());
+        return mav;
+    }
+
+    @GetMapping("/votos/cadastro")
+    public ModelAndView getCadastroVoto(ModelAndView mav) {
+        mav.setViewName("admin/formVoto");
+        mav.addObject("voto", new Voto());
+        return mav;
+    }
+
+    @PostMapping("/votos")
+    public ModelAndView saveVoto(@Valid Voto voto, BindingResult result, ModelAndView mav) {
+        if (result.hasErrors()) {
+            mav.setViewName("admin/formVoto");
+            mav.addObject("voto", voto);
+            return mav;
+        }
+        adminService.saveVoto(voto);
+        mav.setViewName("redirect:/admin/votos");
+        mav.addObject("votos", adminService.listVotos());
+        return mav;
+    }
+
+    @GetMapping("/votos/{id}")
+    public ModelAndView editVoto(@PathVariable(value = "id") Integer id, ModelAndView mav) {
+        mav.setViewName("admin/formVoto");
+        mav.addObject("voto", adminService.getVoto(id));
+        return mav;
+    }
+
+    @GetMapping("/votos/{id}/delete")
+    public ModelAndView deleteVoto(@PathVariable(value = "id") Integer id, ModelAndView mav, RedirectAttributes attr) {
+        adminService.removerVoto(id);
+        attr.addFlashAttribute("mensagem", "Voto removido com sucesso!");
+        mav.setViewName("redirect:/admin/votos");
         return mav;
     }
 

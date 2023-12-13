@@ -23,8 +23,9 @@
         <div class="navbar-nav">
             <a th:classappend="${menu == 'home'} ? 'active'" class="nav-item nav-link" th:href="@{/home}">Home</a>
             <a th:classappend="${menu == 'processos'} ? 'active'" class="nav-item nav-link" th:href="@{/alunos/processos}">Processos</a>
-            <a th:classappend="${menu == 'votos'} ? 'active'" class="nav-item nav-link" th:href="@{/professores/processos}">Votos</a>
+            <a th:classappend="${menu == 'votos professores'} ? 'active'" class="nav-item nav-link" th:href="@{/professores/processos}">Votos Professores</a>
             <a th:classappend="${menu == 'reuniões'} ? 'active'" class="nav-item nav-link" th:href="@{/admin/reunioes}">Reuniões</a>
+            <a th:classappend="${menu == 'votos'} ? 'active'" class="nav-item nav-link" th:href="@{/admin/votos}">Votos</a>
             <a sec:authorize="hasRole('ADMIN')" th:classappend="${menu == 'colegiados'} ? 'active'" class="nav-item nav-link" th:href="@{/admin/colegiados}">Colegiados</a>
             <a sec:authorize="hasRole('ADMIN')" th:classappend="${menu == 'usuarios'} ? 'active'" class="nav-item nav-link" th:href="@{/admin/usuarios}">CRUDS</a>
 

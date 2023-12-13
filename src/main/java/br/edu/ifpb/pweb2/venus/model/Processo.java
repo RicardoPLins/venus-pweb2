@@ -24,6 +24,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 public class Processo {
+    
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;

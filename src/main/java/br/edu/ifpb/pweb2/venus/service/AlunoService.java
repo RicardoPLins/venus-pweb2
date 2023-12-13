@@ -13,6 +13,7 @@ import br.edu.ifpb.pweb2.venus.model.Aluno;
 import br.edu.ifpb.pweb2.venus.model.Assunto;
 import br.edu.ifpb.pweb2.venus.model.Processo;
 import br.edu.ifpb.pweb2.venus.model.StatusEnum;
+import br.edu.ifpb.pweb2.venus.model.TipoDecisao;
 import br.edu.ifpb.pweb2.venus.repository.AlunoRepository;
 import br.edu.ifpb.pweb2.venus.repository.AssuntoRepository;
 import br.edu.ifpb.pweb2.venus.repository.ProcessoRepository;
@@ -44,7 +45,7 @@ public class AlunoService {
 
         Date dataRecepcao = new Date();
         processo.setStatus(StatusEnum.CRIADO);
-        processo.setTipoDecisao(null);
+        processo.setTipoDecisao(TipoDecisao.DEFERIMENTO);
         processo.setParticipante(aluno);
 
         processo.setCurso(aluno.getCurso());

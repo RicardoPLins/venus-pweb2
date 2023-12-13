@@ -4,18 +4,21 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import br.edu.ifpb.pweb2.venus.model.Assunto;
 import br.edu.ifpb.pweb2.venus.model.Curso;
 import br.edu.ifpb.pweb2.venus.model.Processo;
+import br.edu.ifpb.pweb2.venus.model.Voto;
 import br.edu.ifpb.pweb2.venus.service.AdminService;
 import br.edu.ifpb.pweb2.venus.service.ProfessorService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/professores")
@@ -27,14 +30,20 @@ public class ProfessorController {
     @Autowired
     private ProfessorService professorService;   
     
-    
-    // @GetMapping("/processos")
-    // public ModelAndView getAlunos(ModelAndView mav, HttpSession session) {
-    //     // Professor professor = (Professor) session.getAttribute("professor");
-    //     mav.setViewName("alunos/listProcesso");
-    //     mav.addObject("processos", alunoService.listProcesso());
-    //     return mav;
-    // }
+
+    @PostMapping("/processos")
+    public ModelAndView saveProfessor(@Valid Processo processo, BindingResult result, ModelAndView mav){
+        if (result.hasErrors()){
+            mav.setViewName("professores/formProcessoProf");
+            mav.addObject("processo", processo);
+            return mav;
+        }
+        professorService.vote(processo);
+        mav.setViewName("redirect:/professores/processos");
+        mav.addObject("processos", professorService.listProcessos());
+        return mav;
+    }
+
 
     @GetMapping("/processos")
     public ModelAndView processos(ModelAndView mav, HttpSession session) {
@@ -50,17 +59,14 @@ public class ProfessorController {
         return mav;
     }
 
-    // @PostMapping("/processos/votos")
-    // public ModelAndView votos(ModelAndView mav, HttpSession session){
-    //     mav.setViewName("professores/formProcessoProf");
-    //     mav.addObject("votos", professorService.listProcessoDesignados());
-    //     return mav;
-    // }
-
-
     @ModelAttribute("cursoItems")
     public List<Curso> getCursos() {
         return adminService.listarCursos();
+    }
+
+    @ModelAttribute("votoItems")
+    public List<Voto> getVotos() {
+        return adminService.listVotos();
     }
 
     @GetMapping("processos/cadastro")
@@ -70,6 +76,5 @@ public class ProfessorController {
         mav.setViewName("redirect:/professores/processos");
         return mav;
     }
-
 
 }

@@ -3,7 +3,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -17,6 +16,7 @@ import br.edu.ifpb.pweb2.venus.model.Colegiado;
 import br.edu.ifpb.pweb2.venus.model.Curso;
 import br.edu.ifpb.pweb2.venus.model.Professor;
 import br.edu.ifpb.pweb2.venus.model.User;
+import br.edu.ifpb.pweb2.venus.model.Voto;
 import br.edu.ifpb.pweb2.venus.repository.AlunoRepository;
 import br.edu.ifpb.pweb2.venus.repository.AssuntoRepository;
 import br.edu.ifpb.pweb2.venus.repository.AuthorityRepository;
@@ -25,6 +25,7 @@ import br.edu.ifpb.pweb2.venus.repository.CursoRepository;
 // import br.edu.ifpb.pweb2.venus.repository.CursoRepository;
 import br.edu.ifpb.pweb2.venus.repository.ProfessorRepository;
 import br.edu.ifpb.pweb2.venus.repository.UserRepository;
+import br.edu.ifpb.pweb2.venus.repository.VotoRepository;
 
 @Service
 public class AdminService {
@@ -48,6 +49,9 @@ public class AdminService {
 
     @Autowired
     private AuthorityRepository authorityRepository;
+
+    @Autowired
+    private VotoRepository votoRepository;
 
     @Transactional
     public void removerAluno(Integer id) {
@@ -202,5 +206,22 @@ public class AdminService {
 
     public List<User> findEnabledUsers(){
         return userRepository.findByEnabledTrue();
+    }
+
+    public List<Voto> listVotos(){
+        return votoRepository.findAll();
+    }
+
+    @Transactional
+    public void removerVoto(Integer id) {
+        votoRepository.deleteById(id);
+    }
+    @Transactional
+    public void saveVoto(Voto voto) {
+        votoRepository.save(voto);
+    }
+
+    public Optional<Voto> getVoto(Integer id) {
+        return votoRepository.findById(id);
     }
 }
