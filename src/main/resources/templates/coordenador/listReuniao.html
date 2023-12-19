@@ -1,68 +1,59 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}"
-      th:with="titulo='Lista de Reuniões'">
-
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}" th:with="titulo='Listagem de Reunioes'">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title th:text="${titulo}">Lista de Reuniões</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script>
-        function deletar(id) {
-            console.log(`${window.location.href}/${id}`);
-            fetch(`${window.location.href}/${id}` , {
-                method: 'DELETE',
-            })
-                .then(() => {
-                    window.location.reload();
-                })
-        }
-    </script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+ 
+  <title>Coordenador</title>
 </head>
-
 <body>
-    <div layout:fragment="content">
-        <form th:action="@{/coordenador/reunioes/cadastro}" method="GET">
-            <button class="btn btn-primary" type="submit">Nova Reunião</button>
-        </form>
-        <br />
+<div layout:fragment="content">
 
-        <div th:if="${not #lists.isEmpty(reunioes)}">
-            <div th:text="'Total ' + ${#lists.size(reunioes)} + ' reuniões'"
-                style="text-align: right; color: gray; font-size: 0.85em;" />
+  <div class="container">
+    <form th:action="@{/coordenador/reunioes/cadastro}" method="GET">
+      <button class="btn btn-primary" type="submit">Nova Reunião</button>
+    </form>
+    <br>
 
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>Id</th>
-                        <th>Data</th>
-                        <th>Pauta</th>
-                        <th>Membros</th>
-                        <th>Deletar</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr th:each="reuniao : ${reunioes}">
-                        <td th:text="${reuniao.id}"></td>
-                        <td th:text="${#dates.format(reuniao.data, 'dd-MM-yyyy')}"></td>
-                        <td th:text="${reuniao.pauta}"></td>
-                        <td>
-                            <!-- Simulando os membros da reunião -->
-                            <ul>
-                                <li th:each="membro : ${reuniao.colegiado.membros}" th:text="${membro.nome}"></li>
-                            </ul>
-                        </td>
-                        <td>
-                            <button th:onclick="|deletar(${reuniao.id})|" class="btn btn-danger delete-button" data-id="${reuniao.id}">
-                                <i class="fas fa-trash"></i>
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+    <div id="main">
+        <div>
+          <h2>REUNIÕES</h2>
+          <table class="table" id="tabela">
+            <thead>
+              <tr>
+                <th scope="col">Data</th>
+                <th scope="col">Status</th>
+                <th scope="col">Pauta</th>
+                <th scope="col">Alterar</th>
+                <th scope="col">Excluir</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="reuniao : ${reunioes}">
+                <td th:text="${reuniao.dataReuniao}" scope="row"></td>
+                <td th:text="${reuniao.status}" scope="row"></td>
+                <td>
+                  <span th:each="processo : ${reuniao.processos}" th:text="${processo.texto}"></span>
+              </td>
+                <td>
+                  <a th:href="@{/coordenador/reunioes/{id}(id=${reuniao.id})}" class="btn btn-warning" data-id="[[${reuniao.id}]]">
+                    <i class="fas fa-pencil-square-o"></i>
+                  </a>
+                </td>
+                <td>
+                  <form th:action="@{/coordenador/reunioes/{id}/delete(id=${reuniao.id})}">
+                    <button class="btn btn-primary btn-sm" type="submit">Excluir</button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
     </div>
+    </div>
+  </div>
 </body>
-
 </html>

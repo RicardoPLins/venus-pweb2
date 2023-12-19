@@ -1,41 +1,40 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}" th:with="titulo='Lista de Reuniões'">
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}" th:with="titulo='Cadastro de Reunião'">
 <head>
-    <title th:text="${titulo}">Lista de Reuniões</title>
+    <title th:text="${titulo}">Cadastro de Reunião</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <div layout:fragment="content">
-
-        <form th:action="@{/coordenador/reunioes}" method="POST" th:object="${reuniao}">
-            <!-- Adicione campos ocultos se necessário -->
+        <form class="form-inline" th:action="@{/coordenador/reunioes}" method="POST" th:object="${reuniao}">
             <input type="hidden" th:field="*{id}" />
 
             <div class="form-group mx-sm-3 mb-2">
                 <label for="data">Data</label>
-                <input type="text" th:field="*{data}" class="form-control mb-2" />
-                <p th:if="${#fields.hasErrors('data')}" th:errorclass="error" th:errors="*{data}" class="alert alert-danger" />
+                <input type="date" th:field="*{dataReuniao}" class="form-control mb-2" />
+                <p th:if="${#fields.hasErrors('dataReuniao')}" th:errorclass="error" th:errors="*{dataReuniao}" class="alert alert-danger" />
+            </div>
+
+            <div class="form-group">
+                <label for="processo">Pauta:</label>
+                <select id="processo" class="form-select mb-2">
+                    <option th:each="proc : ${reuniao.processos}" th:value="${proc.id}" th:text="${proc.texto}" />
+                </select>            
             </div>
 
             <div class="form-group mx-sm-3 mb-2">
-                <label for="pauta">Pauta</label>
-                <input type="text" th:field="*{pauta}" class="form-control mb-2" />
-                <p th:if="${#fields.hasErrors('pauta')}" th:errorclass="error" th:errors="*{pauta}" class="alert alert-danger" />
+                <label for="statusReuniao">Status:</label>
+                <select th:field="*{statusReuniao}" class="form-select  mb-2">
+                    <option value="ENCERRADA">Encerrada</option>
+                    <option value="PROGRAMADA">Programada</option>
+                    <!-- Adicione mais opções conforme necessário -->
+                </select>
+                <p th:if="${#fields.hasErrors('statusReuniao')}" th:errorclass="error" 
+                    th:errors="*{statusReuniao}" class="alert alert-danger" />
             </div>
 
-            <!-- <div class="form-group mx-sm-3 mb-2">
-                <label for="membros">Membros</label>
-                Simulando a lista de membros
-                <select th:field="*{membros}" class="form-select mb-2">
-                    <option value="1">Membro 1</option>
-                    <option value="2">Membro 2</option>
-                    <option value="3">Membro 3</option>
-                    Adicione opções conforme necessário
-                </select>
-                <p th:if="${#fields.hasErrors('membros')}" th:errorclass="error" 
-                    th:errors="*{membros}" class="alert alert-danger" />
-            </div> -->
-
+            
             <div class="form-group mx-sm-3 mb-2">
                 <input type="submit" value="Salvar" class="btn btn-primary" />
                 <a class="btn btn-secondary" th:href="@{/coordenador/reunioes}">Cancelar</a>

@@ -52,7 +52,6 @@ public class AlunoService {
         processo.setDataRecepcao(dataRecepcao);
         
         processoRepository.save(processo);
-        
     }
 
     public List<Processo> listProcesso() {
