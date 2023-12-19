@@ -57,6 +57,10 @@ public class Processo {
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
 
+    @ManyToOne
+    @JoinColumn(name = "id_professor")
+    private Professor prof_relator;
+
     @OneToOne
     @JoinColumn(name = "id_assunto")
     private Assunto assunto;

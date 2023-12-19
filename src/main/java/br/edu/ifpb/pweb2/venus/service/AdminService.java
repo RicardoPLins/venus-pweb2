@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.venus.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -161,8 +162,17 @@ public class AdminService {
         return colegiadoRepository.findAll();
     }
 
-    public Optional<Colegiado> getColegiado(Integer id) {
-        return colegiadoRepository.findById(id);
+    public  Colegiado getColegiado(Integer id) {
+        return colegiadoRepository.findById(id).orElse(null);
+    }
+
+    public List<Professor> listarProfessoresCurso(Integer id) {
+        Colegiado colegiado = getColegiado(id);
+        List<Professor> listProfessores = new ArrayList<Professor>();
+        professorRepository.findAllByCursoId(colegiado.getCurso().getId())
+                .forEach(listProfessores::add);
+
+        return listProfessores;
     }
 
     @Transactional
@@ -247,4 +257,6 @@ public class AdminService {
     public Optional<Voto> getVoto(Integer id) {
         return votoRepository.findById(id);
     }
+
+    
 }

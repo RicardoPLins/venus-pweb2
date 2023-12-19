@@ -22,9 +22,9 @@
     <nav class="navbar navbar-expand navbar-light bg-light d-flex justify-content-between mb-3">
         <div class="navbar-nav">
             <a th:classappend="${menu == 'home'} ? 'active'" class="nav-item nav-link" th:href="@{/home}">Home</a>
-            <a th:classappend="${menu == 'votos professores'} ? 'active'" class="nav-item nav-link" th:href="@{/professores/processos}">Votos Professores</a>
+            <a th:classappend="${menu == 'votos professores'} ? 'active'" class="nav-item nav-link" th:href="@{/coordenador/processos}">Distribuir Processos</a>
             <a th:classappend="${menu == 'reuniões'} ? 'active'" class="nav-item nav-link" th:href="@{/coordenador/reunioes}">Reuniões</a>
-            <a th:classappend="${menu == 'designar processos'} ? 'active'" class="nav-item nav-link" th:href="@{/coordenador/votos}">Designar Processos</a>
+            <a th:classappend="${menu == 'colegiado'} ? 'active'" class="nav-item nav-link" th:href="@{/coordenador/votos}">Colegiados</a>
 
         </div>
         <form class="form-inline my-2 my-lg-0" th:action="@{/auth/logout}" method="POST">

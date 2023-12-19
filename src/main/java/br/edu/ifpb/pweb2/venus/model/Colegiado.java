@@ -50,8 +50,6 @@ public class Colegiado {
     @OneToMany(mappedBy = "colegiado")
     private List<Professor> membros;
 
-    // private Professor membro1;
 
-    // private Professor membro2;
 
 }

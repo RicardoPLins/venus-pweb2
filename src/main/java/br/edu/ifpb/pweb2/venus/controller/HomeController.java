@@ -24,7 +24,7 @@ public class HomeController {
 
     @GetMapping
     public ModelAndView getHome(Principal principal, ModelAndView mav) {
-        mav.setViewName("redirect:" + this.userService.userHome(principal));
+        mav.setViewName("redirect:" + this.userService.home(principal));
         return mav;
     }
 

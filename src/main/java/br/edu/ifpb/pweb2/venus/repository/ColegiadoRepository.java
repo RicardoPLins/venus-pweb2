@@ -7,5 +7,7 @@ import br.edu.ifpb.pweb2.venus.model.Colegiado;
 
 @Repository
 public interface ColegiadoRepository extends JpaRepository<Colegiado, Integer>{
+
+    Colegiado findByCursoId(Integer id);
     
 }

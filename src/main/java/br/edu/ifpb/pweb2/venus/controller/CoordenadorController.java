@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.venus.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.edu.ifpb.pweb2.venus.model.Processo;
+import br.edu.ifpb.pweb2.venus.model.Professor;
 import br.edu.ifpb.pweb2.venus.model.Reuniao;
 import br.edu.ifpb.pweb2.venus.service.CoordenadorService;
 import jakarta.validation.Valid;
@@ -26,6 +28,25 @@ public class CoordenadorController {
     private CoordenadorService coordenadorService;
 
 
+    @GetMapping("/processos")
+    public ModelAndView getProcessos(ModelAndView mav) {
+        mav.setViewName("coordenador/listProcessos");
+        mav.addObject("processos", coordenadorService.listProcessos());
+        return mav;
+    }
+
+    @GetMapping("/processo/{id}/relator")
+    public ModelAndView getProcesso(@PathVariable("id") Integer processoId, ModelAndView mav) {
+        mav.setViewName("coordenador/addRelator");
+        mav.addObject("processo", coordenadorService.getProcesso(processoId));
+        return mav;
+    }
+        
+    @ModelAttribute("relatorItens")
+    public List<Professor> getProfessorRelator(Principal principal) {
+        return coordenadorService.listProfessoresColegiado(principal);
+
+    }
 
 
     @GetMapping("/reunioes")

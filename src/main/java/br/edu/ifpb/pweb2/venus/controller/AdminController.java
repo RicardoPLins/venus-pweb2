@@ -180,18 +180,18 @@ public class AdminController {
         return mav;
     }
 
-    @GetMapping("/colegiados/{id}/membros")
+    @GetMapping("/colegiados/membros/{id}")
     public ModelAndView getAddMembros(@PathVariable(value = "id") Integer id, ModelAndView mav) {
         mav.setViewName("admin/formMembro");
         mav.addObject("colegiadoId", id);
-        mav.addObject("professores", adminService.listarProfessores());
+        mav.addObject("professores", adminService.listarProfessoresCurso(id));
         return mav;
     }
 
     @PostMapping("/colegiados/membros")
     public ModelAndView salvarMembro(Integer idColegiado, Integer idProfessor, ModelAndView mav) {
         adminService.adicionarMembro(idColegiado, idProfessor);
-        mav.setViewName("redirect:/admin/colegiados/" + idColegiado + "/membros");
+        mav.setViewName("redirect:/admin/colegiados/membros/" + idColegiado );
         return mav;
 
     }
@@ -253,7 +253,7 @@ public class AdminController {
         return adminService.listarCursos();
     }
 
-    @ModelAttribute("professoresMembros")
+    @ModelAttribute("professores")
     public List<Professor> getProfessores() {
         return adminService.listarProfessores();
     }

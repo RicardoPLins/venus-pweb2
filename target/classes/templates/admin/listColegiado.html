@@ -36,6 +36,7 @@
                             <th>Portaria</th>
                             <th>Curso</th>
                             <th>Membros</th>
+                            <th>Adicionar Membros</th>
                             <th>Alterar</th>
                             <th>Delete</th>
                         </tr>
@@ -50,8 +51,13 @@
                             <td th:text="${colegiado.curso.nome}"></td>
                             <td>
                                 <ul>
-                                    <li th:each="membro : ${colegiado.membros}" th:text="${membro.nome}"></li>
+                                    <li th:each="professor : ${colegiado.membros}" th:text="${professor.nome}"></li>
                                 </ul>
+                            </td>
+                            <td>
+                                <a th:href="@{/admin/colegiados/membros/{id}(id=${colegiado.id})}" class="btn btn-secondary" data-id="${colegiado.id}">
+                                    adicionar
+                                </a>
                             </td>
                             
                             <td>

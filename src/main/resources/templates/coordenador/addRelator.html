@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout_coordenador}" th:with="titulo='Cadastro de Reunião'">
+<head>
+    <title th:text="${titulo}">Cadastro de Relator</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div layout:fragment="content">
+        <form class="form-inline" th:action="@{/coordenador/processos}" method="POST" th:object="${processo}">
+            <input type="hidden" th:field="*{id}" />
+
+            <h1>Adicionar Relator</h1>
+
+          <input type="hidden" th:field="*{id}">
+
+          <label for="numeroProcesso">Número do processo:</label>
+          <input type="text"  th:field="*{numero}" id="numeroProcesso" class="form-control">
+          
+          <label for="prof_relator">Professor Relator:</label>
+          <select class="form-select" id="prof_relator" th:field="*{prof_relator.id}" required>
+            <option th:each="prof_relator : ${relatorItens}" th:value="${prof_relator.id}" th:text="${prof_relator.nome}"></option>
+          </select>
+
+          <button type="submit" class="btn btn-secondary">Adicionar</button>
+        </form>
+    </div>
+</body>
+</html>
