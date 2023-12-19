@@ -106,8 +106,19 @@ public class AdminService {
     @Transactional
     public void salvarProfessor(Professor professor) {
         PasswordEncoder hash = new BCryptPasswordEncoder();
-        if (professor.getId() == null) {
-            // Novo registro de estudante
+
+        if(professor.getCoordenador() == true){
+            professor.setCoordenador(true);
+            String senhaCriptograda = hash.encode((CharSequence) professor.getSenha());
+            professor.setSenha(senhaCriptograda);
+            User user = new User(professor.getLogin(), senhaCriptograda);
+            user.setAuthorities(Collections.singletonList(new Authority(user, "ROLE_COORDENADOR")));
+            user.setEnabled(true);
+            professor.setUser(user);
+            professorRepository.save(professor);
+        }
+        else{
+            professor.setCoordenador(false);
             String senhaCriptograda = hash.encode((CharSequence) professor.getSenha());
             professor.setSenha(senhaCriptograda);
             User user = new User(professor.getLogin(), senhaCriptograda);
@@ -116,6 +127,16 @@ public class AdminService {
             professor.setUser(user);
             professorRepository.save(professor);
         }
+        // if (professor.getId() == null) {
+        //     // Novo registro de estudante
+        //     String senhaCriptograda = hash.encode((CharSequence) professor.getSenha());
+        //     professor.setSenha(senhaCriptograda);
+        //     User user = new User(professor.getLogin(), senhaCriptograda);
+        //     user.setAuthorities(Collections.singletonList(new Authority(user, "ROLE_PROFESSOR")));
+        //     user.setEnabled(true);
+        //     professor.setUser(user);
+        //     professorRepository.save(professor);
+        // }
     }
 
     public List<Professor> listarProfessores() {

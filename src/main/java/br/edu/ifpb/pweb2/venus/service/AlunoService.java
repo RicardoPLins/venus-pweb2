@@ -74,4 +74,6 @@ public class AlunoService {
         return processoRepository.findAllByParticipanteLogin(user.getName());
     }
 
+    
+
 }

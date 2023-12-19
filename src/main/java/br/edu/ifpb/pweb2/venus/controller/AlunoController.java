@@ -39,10 +39,9 @@ public class AlunoController {
     private AssuntoRepository assuntoRepository;
 
     @GetMapping("/processos")
-    public ModelAndView getAlunos(ModelAndView mav, HttpSession session) {
-        // Professor professor = (Professor) session.getAttribute("professor");
+    public ModelAndView getProcessos(ModelAndView mav, Principal principal) {
         mav.setViewName("alunos/listProcesso");
-        mav.addObject("processos", alunoService.listProcesso());
+        mav.addObject("processos", alunoService.consultaProcessos(principal));
         return mav;
     }
 

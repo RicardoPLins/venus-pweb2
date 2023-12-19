@@ -1,0 +1,39 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}" th:with="titulo='Lista de Votos'">
+
+<head>
+    <title th:text="${titulo}">Lista de Votos</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+
+<body>
+    <div layout:fragment="content">
+            <form th:action="@{/admin/votos/cadastro}" method="GET">
+                <button class="btn btn-primary" type="submit">Novo</button>
+            </form>
+            <br />
+
+
+        <h2>Lista de Votos</h2>
+         
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Tipo de Voto</th>
+                    <th>Ausente?</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="voto : ${votos}">
+                    <td th:text="${voto.id}">ID</td>
+                    <td th:text="${voto.voto}">Tipo de Voto</td>
+                    <td th:text="${voto.ausente}">Ausente?</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
