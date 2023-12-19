@@ -35,10 +35,17 @@ public class CoordenadorController {
         return mav;
     }
 
-    @GetMapping("/processo/{id}/relator")
+    @GetMapping("/processos/{id}/relator")
     public ModelAndView getProcesso(@PathVariable("id") Integer processoId, ModelAndView mav) {
         mav.setViewName("coordenador/addRelator");
         mav.addObject("processo", coordenadorService.getProcesso(processoId));
+        return mav;
+    }
+
+    @PostMapping("/processos/{id}/relator")
+    public ModelAndView setRelator(Processo processo, ModelAndView mav) {
+        coordenadorService.saveProcesso(processo);
+        mav.setViewName("redirect:/coordenador/processos");
         return mav;
     }
         
