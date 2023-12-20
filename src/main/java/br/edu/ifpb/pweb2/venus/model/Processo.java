@@ -5,10 +5,13 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -21,6 +24,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 public class Processo {
+    
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
@@ -40,15 +44,40 @@ public class Processo {
 
     private TipoDecisao decisaoRelator;
 
+    private TipoVoto voto;
+
     @NotBlank(message = "Campo Obrigatório!")
     @Size(min=5, max = 40, message = "O requerimento deve ter no min 5 e max 40")
     private String texto;
+
+    // @NotBlank(message = "Campo Obrigatório!")
+    @Size(min=5, max = 40, message = "O requerimento deve ter no min 5 e max 40")
+    private String justificativa;
+
+    @Enumerated(EnumType.STRING)
+    private StatusEnum status;
+
+    @ManyToOne
+    @JoinColumn(name = "id_professor")
+    private Professor prof_relator;
 
     @OneToOne
     @JoinColumn(name = "id_assunto")
     private Assunto assunto;
 
+    @ManyToOne
+    @JoinColumn(name = "id_aluno")
+    private Aluno participante;
+
+    @ManyToOne
+    @JoinColumn(name = "id_curso")
+    private Curso curso;
+
     public Processo(Assunto assunto) {
         this.assunto = assunto;
+    }
+
+    public void setTipoDecisao(TipoDecisao decisaoRelator) {
+        this.decisaoRelator = decisaoRelator;
     }
 }

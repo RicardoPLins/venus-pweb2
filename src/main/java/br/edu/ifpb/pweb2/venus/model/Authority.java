@@ -31,13 +31,22 @@ private User username;
 @Column(name = "authority", insertable = false, updatable = false)
 private String authority;
 
+public Authority(User user, String authority) {
+    Authority.AuthorityId id = new Authority.AuthorityId(user.getUsername(), authority);
+    this.id = id;
+    this.username = user;
+    this.authority = authority;
+}
+
 
 @Embeddable
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public static class AuthorityId implements Serializable {
+
 private String username;
 private String authority;
+
     }
 }

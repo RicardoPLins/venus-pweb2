@@ -1,0 +1,35 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout_professor}" th:with="titulo='Voto de Processo'">
+<head>
+    <title th:text="${titulo}">Voto de Processo</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div layout:fragment="content">
+        <form class="form-inline" th:action="@{/professores/processos}" method="POST" th:object="${processo}">
+            <input type="hidden" th:field="*{id}" />
+        
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="voto">Voto:</label>
+                <select th:field="*{voto}" class="form-select  mb-2">
+                    <option value="COM_RELATOR">Favor</option>
+                    <option value="DIVERGENTE">Contra</option>
+                </select>
+                <p th:if="${#fields.hasErrors('voto')}" th:errorclass="error" 
+                    th:errors="*{voto}" class="alert alert-danger" />
+            </div>
+            
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="justificativa">Justificativa:</label>
+                <input th:field="*{justificativa}" value="Texto padrão da justificativa" class="form-control mb-2"></input>
+                <p th:if="${#fields.hasErrors('justificativa')}" th:errorclass="error" th:errors="*{justificativa}" class="alert alert-danger" />
+            </div>
+            
+            <div class="form-group mx-sm-3 mb-2">
+                <input type="submit" value="Salvar" class="btn btn-primary" />
+                <a class="btn btn-secondary" th:href="@{/professores/processos}">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

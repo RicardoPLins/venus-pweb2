@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout_coordenador}" th:with="titulo='Listagem de Processos'">
+
+<meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+ 
+  <title>Coordenador</title>
+</head>
+<body>
+
+  <div layout:fragment="content">
+    <div class="container">
+        <form th:action="@{/coordenador/processos}" method="GET">
+        </form>
+        <br>
+    <div id="main">
+        <div>
+          <h2>Listagem Processos</h2>
+
+          <table class="table" id="tabela">
+            <thead>
+              <tr>
+                <th scope="col">Número</th>
+                <th scope="col">Aluno</th>
+                <th scope="col">Assunto</th>
+                <th scope="col">Status</th>
+                <th scope="col">Professor Relator</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="processo : ${processos}">
+                <th th:text="${processo.numero}"></th>
+                <td th:text="${processo.participante.nome}"></td>
+                <td th:text="${processo.assunto.nome}"></td>
+                <td th:text="${processo.status}"></td>
+                <td th:if="${processo.prof_relator == null}"> <a class="btn btn-primary" th:href="@{/coordenador/processos/{processoId}/relator(processoId=${processo.id})}"> Adicionar relator </a> </td>
+                <td th:unless="${processo.prof_relator == null}" th:text="${processo.prof_relator.nome}"> </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+  </div>
+</body>
+</html>

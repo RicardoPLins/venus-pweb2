@@ -9,6 +9,10 @@ import br.edu.ifpb.pweb2.venus.model.Professor;
 
 @Repository
 public interface ProfessorRepository extends JpaRepository<Professor, Integer>{
+
+    Professor findByLogin(String login);
+
+    List<Professor> findAllByCursoId(Integer id);
     
 
 }

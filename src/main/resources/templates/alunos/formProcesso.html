@@ -1,4 +1,4 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}" th:with="titulo='Cadastro de Processo'">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout_aluno}" th:with="titulo='Cadastro de Processo'">
 <head>
     <title th:text="${titulo}">Cadastro de Processo</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -8,43 +8,11 @@
     <div layout:fragment="content">
         <form class="form-inline" th:action="@{/alunos/processos}" method="POST" th:object="${processo}">
             <input type="hidden" th:field="*{id}" />
-            
-            <!-- <div class="form-group mx-sm-3 mb-2">
-                <label for="numero">Número</label>
-                <input type="text" th:field="*{numero}" class="form-control mb-2" />
-                <p th:if="${#fields.hasErrors('numero')}" th:errorclass="error" th:errors="*{numero}" class="alert alert-danger" />
-            </div> -->
-
-            <div class="form-group mx-sm-3 mb-2">
-                <label for="dataRecepcao">Data de Recepção</label>
-                <input type="date" th:field="*{dataRecepcao}" class="form-control mb-2" />
-                <p th:if="${#fields.hasErrors('dataRecepcao')}" th:errorclass="error" th:errors="*{dataRecepcao}" class="alert alert-danger" />
-            </div>
-
-            <div class="form-group mx-sm-3 mb-2">
-                <label for="dataDistribuicao">Data de Distribuição</label>
-                <input type="date" th:field="*{dataDistribuicao}" class="form-control mb-2" />
-                <p th:if="${#fields.hasErrors('dataDistribuicao')}" th:errorclass="error" th:errors="*{dataDistribuicao}" class="alert alert-danger" />
-            </div>
-
-            <div class="form-group mx-sm-3 mb-2">
-                <label for="dataParecer">Data de Parecer</label>
-                <input type="date" th:field="*{dataParecer}" class="form-control mb-2" />
-                <p th:if="${#fields.hasErrors('dataParecer')}" th:errorclass="error" th:errors="*{dataParecer}" class="alert alert-danger" />
-            </div>
 
             <div class="form-group mx-sm-3 mb-2">
                 <label for="parecer">Parecer</label>
                 <input type="file" th:field="*{parecer}" class="form-control mb-2" />
                 <p th:if="${#fields.hasErrors('parecer')}" th:errorclass="error" th:errors="*{parecer}" class="alert alert-danger" />
-            </div>
-
-            <div class="form-group mx-sm-3 mb-2">
-                <p>Decisão do Relator</p>
-                <select th:field="*{decisaoRelator}" class="form-control mb-2">
-                    <option value="DEFERIMENTO">DEFERIMENTO</option>
-                    <option value="INDEFERIMENTO">INDEFERIMENTO</option>
-                </select>
             </div>
 
             <div class="form-group mx-sm-3 mb-2">
@@ -54,9 +22,9 @@
             </div>
 
             <div class="form-group mx-sm-3 mb-2">
-                <label for="assunto">Assunto</label>
+                <label for="assunto">Assunto:</label>
                 <select th:field="*{assunto}" class="form-select  mb-2">
-                    <option th:each="ass : ${assuntoItems}" th:value="${ass.id}" th:text="${ass.nome}" />
+                    <option th:each="ass : ${assuntos}" th:value="${ass.id}" th:text="${ass.nome}" />
                 </select>
                 <p th:if="${#fields.hasErrors('assunto.id')}" th:errorclass="error" 
                     th:errors="*{assunto.id}" class="alert alert-danger" />

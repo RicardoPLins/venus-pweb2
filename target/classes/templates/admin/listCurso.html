@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}"
+    th:with="titulo='Cursos'">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -16,7 +17,7 @@
     <div></div>
   </div>
 
-  <div class="container">
+  <div layout:fragment="content">
     <form th:action="@{/admin/cursos/cadastro}" method="GET">
       <button class="btn btn-primary" type="submit">Novo Curso</button>
   </form>

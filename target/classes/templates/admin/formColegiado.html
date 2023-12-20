@@ -1,58 +1,79 @@
 <!DOCTYPE html>
-<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}"
+    th:with="titulo='Cadastro de Colegiado'">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-  <title>Admin</title>
+    <title>Colegiado</title>
 </head>
+
 <body>
- 
-  <div class="container">
-    <form th:action="@{/admin/colegiados/cadastro}" method="GET">
-      <button class="btn btn-primary" type="submit">Novo Colegiado</button>
-  </form>
+    <div layout:fragment="content">
+        <form class="form" th:action="@{/admin/colegiados}" method="POST" th:object="${colegiado}">
+            <input type="hidden" th:field="*{id}" />
+            <div class="form-group">
+                <label for="dataInicio">Data de Início:</label>
+                <input type="date" th:field="*{dataInicio}" class="form-control" />
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('dataInicio')}" th:errorclass="error"
+                    th:errors="*{dataInicio}"></small>
+            </div>
+            <div class="form-group">
+                <label for="dataFim">Data de Fim:</label>
+                <input type="date" th:field="*{dataFim}" class="form-control" />
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('dataFim')}" th:errorclass="error"
+                    th:errors="*{dataFim}"></small>
+            </div>
+            <div class="form-group">
+                <label for="descricao">Descrição:</label>
+                <input type="text" th:field="*{descricao}" class="form-control" />
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('descricao')}" th:errorclass="error"
+                    th:errors="*{descricao}"></small>
+            </div>
+            <div class="form-group">
+                <label for="portaria">Portaria:</label>
+                <input type="text" th:field="*{portaria}" class="form-control" />
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('portaria')}" th:errorclass="error"
+                    th:errors="*{portaria}"></small>
+            </div>
+            <div class="form-group">
+                <label for="curso">Curso:</label>
+                <select th:field="*{curso.id}" id="curso" class="form-select mb-2">
+                    <option th:each="curso : ${cursoItems}" th:value="${curso.id}" th:text="${curso.nome}" />
+                </select>
+            </div>
 
-    <div id="main">
-      <h2>COLEGIADO</h2>
+            <div class="form-group">
+                <label>Membros:</label>
+                <div th:each="professor : ${professores}">
+                    <div class="form-check">
+                        <input type="checkbox" th:field="*{membros}" th:value="${professor.id}" class="form-check-input" id="${'professor_' + professor.id}">
+                        <label class="form-check-label" th:for="${'professor_' + professor.id}" th:text="${professor.nome}"></label>
+                    </div>
+                </div>
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('membros')}" th:errorclass="error" th:errors="*{membros}"></small>
+            </div>
 
-      <div id="form-register">
-        <form th:action="@{/admin/colegiados}" method="post" th:object="${colegiado}">
-            <input type="hidden" th:field="*{id}">
 
-            <label for="datainicio">Data de início:</label>
-            <input type="date" id="datainicio" th:field="*{dataInicio}" class="form-control"/>
-          
-          
-            <label for="datafim">Data de fim:</label>
-            <input type="date" id="datafim" th:field="*{dataFim}" class="form-control"/>
-          
-          
-            <label for="descricao">Descrição:</label>
-            <input type="text" id="descricao" th:field="*{descricao}" class="form-control"/>
-          
-            <label for="portaria">Portaria:</label>
-            <input type="text" id="portaria" th:field="*{portaria}" class="form-control"/>
-          
 
-            <label for="curso">Curso:</label>
-            <input type="text" id="Curso" th:field="*{curso}" class="form-control"/>
-
-            <!-- <label for="curso"> Curso:  </label>
-            <select  th:field="*{curso.id}" id="curso" class="form-select mb-2">
-              <option th:each="curso : ${cursoItems}" th:value="${curso.id}" th:text="${curso.nome}"></option>
-          </select> -->
-
-        
-
-          <button type="submit" class="btn btn-primary"> Salvar </button>
+            <!-- <div class="form-group">
+              <label for="membros">Membro 1:</label>
+              <select th:field="*{membros.id}" id="membros" class="form-select mb-2">
+                  <option th:each="professor : ${professoresMembros}" th:value="${professor.id}" th:text="${professor.nome}" />
+              </select>
+          </div>
+          <div class="form-group">
+            <label for="membros">Membro 2:</label>
+            <select th:field="*{membros.id}" id="membros" class="form-select mb-2">
+                <option th:each="professor : ${professoresMembros}" th:value="${professor.id}" th:text="${professor.nome}" />
+            </select>
+        </div> -->
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <a class="btn btn-secondary" th:href="@{/admin/colegiados}">Cancelar</a>
         </form>
-        
-      </div>
     </div>
-  </div>
 </body>
 
 </html>
