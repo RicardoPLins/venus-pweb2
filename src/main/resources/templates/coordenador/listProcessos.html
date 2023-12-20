@@ -36,7 +36,7 @@
                 <td th:text="${processo.participante.nome}"></td>
                 <td th:text="${processo.assunto.nome}"></td>
                 <td th:text="${processo.status}"></td>
-                <td th:if="${processo.prof_relator == null}"> <a class="btn btn-primary" th:href="@{/coordenador/processo/{processoId}/relator(processoId=${processo.id})}"> Adicionar relator </a> </td>
+                <td th:if="${processo.prof_relator == null}"> <a class="btn btn-primary" th:href="@{/coordenador/processos/{processoId}/relator(processoId=${processo.id})}"> Adicionar relator </a> </td>
                 <td th:unless="${processo.prof_relator == null}" th:text="${processo.prof_relator.nome}"> </td>
               </tr>
             </tbody>

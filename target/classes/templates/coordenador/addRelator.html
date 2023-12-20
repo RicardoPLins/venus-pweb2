@@ -7,7 +7,7 @@
 </head>
 <body>
     <div layout:fragment="content">
-        <form class="form-inline" th:action="@{/coordenador/processos}" method="POST" th:object="${processo}">
+        <form class="form-inline" th:action="@{/coordenador/processos/{processoId}/relator(processoId=${processo.id})}" method="POST" th:object="${processo}">
             <input type="hidden" th:field="*{id}" />
 
             <h1>Adicionar Relator</h1>

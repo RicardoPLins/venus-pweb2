@@ -193,7 +193,6 @@ public class AdminController {
         adminService.adicionarMembro(idColegiado, idProfessor);
         mav.setViewName("redirect:/admin/colegiados/membros/" + idColegiado );
         return mav;
-
     }
 
     @DeleteMapping("/colegiados/{id}/membros/{idProfessor}")
