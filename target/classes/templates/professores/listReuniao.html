@@ -10,7 +10,7 @@
 </head>
 <body>
     <div layout:fragment="content" class="container">
-        <form th:action="@{/professores/reunioes}" method="GET">
+        <form th:action="@{/professores/reunioes/qm}" method="GET">
             <div class="form-group">
                 <label for="tipo">Consultar por:</label>
                 <select name="tipo" id="tipo" class="form-select">
@@ -18,11 +18,13 @@
                     <!-- Outras opções de consulta -->
                 </select>
             </div>
-            <div class="form-group">
+            <div class="form-group mx-sm-3 mb-2">
                 <label for="status">Status:</label>
                 <select name="status" id="status" class="form-select">
                     <option value="">Todos</option> <!-- Opção para mostrar todas as reuniões -->
-                    <option th:each="status : ${statusItems}" th:value="${status}" th:text="${status.getStatus()}"></option>
+                    <option value="PROGRAMADA">Programada</option>
+                    <option value="ENCERRADA">Encerrada</option>
+                    <!-- Adicione mais opções se necessário -->
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Consultar</button>
@@ -40,11 +42,18 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr th:each="reuniao : ${reunioes}" th:if="${reuniao.status == null or reuniao.status == selectedStatus}">
+                    <!-- Preencha esta seção com os detalhes das reuniões -->
+                    <tr th:each="reuniao : ${reunioes}">
                         <td th:text="${reuniao.dataReuniao}" scope="row"></td>
                         <td th:text="${reuniao.status}" scope="row"></td>
-                        <td th:text="${reuniao.processos}" scope="row"></td>
+                        <!-- Aqui, talvez seja necessário percorrer os processos da reunião -->
+                        <td>
+                            <ul>
+                                <li th:each="processo : ${reuniao.processos}" th:text="${processo.texto}"></li>
+                            </ul>
+                        </td>
                     </tr>
+                    <!-- Fim da iteração das reuniões -->
                 </tbody>
             </table>
         </div>

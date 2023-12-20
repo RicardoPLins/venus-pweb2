@@ -14,6 +14,7 @@ import br.edu.ifpb.pweb2.venus.model.Processo;
 import br.edu.ifpb.pweb2.venus.model.Professor;
 import br.edu.ifpb.pweb2.venus.model.Reuniao;
 import br.edu.ifpb.pweb2.venus.model.StatusEnum;
+import br.edu.ifpb.pweb2.venus.model.StatusReuniao;
 import br.edu.ifpb.pweb2.venus.repository.ColegiadoRepository;
 import br.edu.ifpb.pweb2.venus.repository.ProcessoRepository;
 import br.edu.ifpb.pweb2.venus.repository.ProfessorRepository;
@@ -48,16 +49,8 @@ public class CoordenadorService {
 
     @Transactional
     public void saveReuniao(Reuniao reuniao) {
-        // Reuniao r = reuniaoRepository.findById(reuniao.getId()).get();
-        // // if (r!= null){
-        // //     r.setStatus(reuniao.getStatus());
-        // //     r.setProcessos(reuniao.getProcessos());
-        reuniaoRepository.save(reuniao);
-        // }
-        // else{
-        //     throw new RuntimeException("Reuniao não encontrada" + reuniao.getId());
-        // }
-        
+        reuniao.setStatus(StatusReuniao.PROGRAMADA);
+        reuniaoRepository.save(reuniao);   
     }
 
     public Optional<Reuniao> getReuniao(Integer id) {

@@ -28,16 +28,7 @@
             </div>
             
 
-            <div class="form-group mx-sm-3 mb-2">
-                <label for="statusReuniao">Status:</label>
-                <select th:field="*{statusReuniao}" class="form-select  mb-2">
-                    <option th:each="status : ${status}" th:value="${status.descricao}" th:text="${status.descricao}" />
-                </select>
-                <p th:if="${#fields.hasErrors('statusReuniao')}" th:errorclass="error" 
-                    th:errors="*{statusReuniao}" class="alert alert-danger" />
-            </div>
-            
-
+               
             
             <div class="form-group mx-sm-3 mb-2">
                 <input type="submit" value="Salvar" class="btn btn-primary" />
