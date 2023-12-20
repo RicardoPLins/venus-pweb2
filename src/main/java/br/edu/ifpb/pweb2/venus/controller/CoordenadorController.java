@@ -17,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.edu.ifpb.pweb2.venus.model.Processo;
 import br.edu.ifpb.pweb2.venus.model.Professor;
 import br.edu.ifpb.pweb2.venus.model.Reuniao;
+import br.edu.ifpb.pweb2.venus.model.StatusReuniao;
 import br.edu.ifpb.pweb2.venus.service.CoordenadorService;
 import jakarta.validation.Valid;
 
@@ -91,11 +92,10 @@ public class CoordenadorController {
         return mav;
     }
 
-
-    // @ModelAttribute("status")
-    // public List<StatusReuniao> getStatus() {
-    //     return coordenadorService.listStatusReuniaos();
-    // }
+    @ModelAttribute("status")
+        public List<StatusReuniao> getStatus() {
+            return List.of(StatusReuniao.values());
+        }
 
 
     @ModelAttribute("processos")

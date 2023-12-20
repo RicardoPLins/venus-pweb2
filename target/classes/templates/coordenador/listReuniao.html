@@ -34,7 +34,7 @@
             <tbody>
               <tr th:each="reuniao : ${reunioes}">
                 <td th:text="${reuniao.dataReuniao}" scope="row"></td>
-                <td th:text="${reuniao.status}" scope="row"></td>
+                <td th:text="${reuniao.status.getStatusReuniao()}" scope="row"></td>
                 <td>
                   <span th:each="processo : ${reuniao.processos}" th:text="${processo.texto}"></span>
               </td>

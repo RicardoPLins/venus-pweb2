@@ -46,15 +46,15 @@ public class CoordenadorService {
 
     @Transactional
     public void saveReuniao(Reuniao reuniao) {
-        Reuniao r = reuniaoRepository.findById(reuniao.getId()).get();
-        if (r!= null){
-            r.setStatus(reuniao.getStatus());
-            r.setProcessos(reuniao.getProcessos());
-            reuniaoRepository.save(reuniao);
-        }
-        else{
-            throw new RuntimeException("Reuniao não encontrada" + reuniao.getId());
-        }
+        // Reuniao r = reuniaoRepository.findById(reuniao.getId()).get();
+        // // if (r!= null){
+        // //     r.setStatus(reuniao.getStatus());
+        // //     r.setProcessos(reuniao.getProcessos());
+        reuniaoRepository.save(reuniao);
+        // }
+        // else{
+        //     throw new RuntimeException("Reuniao não encontrada" + reuniao.getId());
+        // }
         
     }
 

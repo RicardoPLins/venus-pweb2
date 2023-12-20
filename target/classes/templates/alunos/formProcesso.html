@@ -24,7 +24,7 @@
             <div class="form-group mx-sm-3 mb-2">
                 <label for="assunto">Assunto:</label>
                 <select th:field="*{assunto}" class="form-select  mb-2">
-                    <option th:each="ass : ${assuntoItems}" th:value="${ass.id}" th:text="${ass.nome}" />
+                    <option th:each="ass : ${assuntos}" th:value="${ass.id}" th:text="${ass.nome}" />
                 </select>
                 <p th:if="${#fields.hasErrors('assunto.id')}" th:errorclass="error" 
                     th:errors="*{assunto.id}" class="alert alert-danger" />

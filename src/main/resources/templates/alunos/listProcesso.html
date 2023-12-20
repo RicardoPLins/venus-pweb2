@@ -8,18 +8,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script>
-        function deletar(id) {
-            console.log(`${window.location.href}/${id}`);
-            fetch(`${window.location.href}/${id}` , {
-                method: 'DELETE',
-            })
-                .then(() => {
-                    window.location.reload();
-                })
-        }
-    </script>
-</head>
+    </head>
 
 <body>
     <div layout:fragment="content">
@@ -35,7 +24,7 @@
             <div class="form-group mx-sm-3 mb-2">
                 <label for="assunto">Assunto:</label>
                 <select name="assuntoId" class="form-select mb-2">
-                    <option th:each="assunto : ${assuntoItems}" th:value="${assunto.id}" th:text="${assunto.nome}"></option>
+                    <option th:each="assunto : ${assuntos}" th:value="${assunto.id}" th:text="${assunto.nome}"></option>
                 </select>
             </div>
             <!-- Para "findByStatus" você pode ter um campo para o status -->
@@ -80,9 +69,9 @@
                             </a>
                         </td>
                         <td>
-                            <button th:onclick="|deletar(${processo.id})|" class="btn btn-danger delete-button" data-id="[[${processo.id}]]">
-                                <i class="fas fa-trash"></i>
-                            </button>
+                            <form th:action="@{/alunos/processos/{id}/delete(id=${processo.id})}">
+                                <button class="btn btn-primary btn-sm" type="submit">Excluir</button>
+                            </form>
                         </td>
                     </tr>
                 </tbody>
