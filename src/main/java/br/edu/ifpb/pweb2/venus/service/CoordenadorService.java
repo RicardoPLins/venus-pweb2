@@ -84,10 +84,12 @@ public class CoordenadorService {
     }
 
     @Transactional
-    public void saveProcesso(Processo processo) {
+    public void saveProcesso(Processo processo, String login) {
         processo = processoRepository.findById(processo.getId()).get();
-        processo.setProf_relator(processo.getProf_relator());
+        Professor relator = professorRepository.findByLogin(login);
+        processo.setRelator(relator);
         processo.setDataDistribuicao(new Date());
+        // processo.setRelator(processo.getRelator());
         processo.setStatus(StatusEnum.DISTRIBUIDO);
         processoRepository.save(processo);
     }

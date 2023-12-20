@@ -43,8 +43,8 @@ public class CoordenadorController {
     }
 
     @PostMapping("/processos/{id}/relator")
-    public ModelAndView setRelator(Processo processo, ModelAndView mav) {
-        coordenadorService.saveProcesso(processo);
+    public ModelAndView setRelator(Processo processo, Professor relator, ModelAndView mav) {
+        coordenadorService.saveProcesso(processo, relator.getLogin());
         mav.setViewName("redirect:/coordenador/processos");
         return mav;
     }

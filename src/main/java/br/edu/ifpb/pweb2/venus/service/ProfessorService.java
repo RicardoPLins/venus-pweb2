@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.venus.service;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -40,6 +41,10 @@ public class ProfessorService{
         processoProf.setJustificativa(processo.getJustificativa());
         processoRepository.save(processoProf);
 
+    }
+
+    public List<Processo> listProcessosDesignados(Principal principal) {
+        return processoRepository.findByRelatorLogin(principal.getName());
     }
    
 }

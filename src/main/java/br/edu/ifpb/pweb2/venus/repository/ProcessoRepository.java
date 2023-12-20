@@ -18,4 +18,6 @@ public interface ProcessoRepository extends JpaRepository<Processo, Integer>{
 
     public List<Processo> findByStatus(StatusEnum status);
 
+    public List<Processo> findByRelatorLogin(String login);
+
 }

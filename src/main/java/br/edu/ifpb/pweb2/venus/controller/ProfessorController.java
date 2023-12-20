@@ -1,5 +1,6 @@
 package br.edu.ifpb.pweb2.venus.controller;
 
+import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,9 +58,9 @@ public class ProfessorController {
 
 
     @GetMapping("/processos")
-    public ModelAndView processos(ModelAndView mav, HttpSession session) {
+    public ModelAndView processos(ModelAndView mav, Principal principal) {
         mav.setViewName("professores/listProcessosProf");
-        mav.addObject("processos", professorService.listProcessos());
+        mav.addObject("processos", professorService.listProcessosDesignados(principal));
         return mav;
     }
 

@@ -59,7 +59,7 @@ public class Processo {
 
     @ManyToOne
     @JoinColumn(name = "id_professor")
-    private Professor prof_relator;
+    private Professor relator;
 
     @OneToOne
     @JoinColumn(name = "id_assunto")
@@ -75,6 +75,10 @@ public class Processo {
 
     public Processo(Assunto assunto) {
         this.assunto = assunto;
+    }
+
+    public void setRelator(Professor professor) {
+        this.relator = professor;
     }
 
     public void setTipoDecisao(TipoDecisao decisaoRelator) {
