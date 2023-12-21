@@ -7,5 +7,7 @@ import br.edu.ifpb.pweb2.venus.model.Assunto;
 
 @Repository
 public interface AssuntoRepository extends JpaRepository<Assunto, Integer> {
+
+    
     
 }

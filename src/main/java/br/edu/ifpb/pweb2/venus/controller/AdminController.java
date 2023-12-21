@@ -3,6 +3,9 @@ package br.edu.ifpb.pweb2.venus.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,7 +14,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.edu.ifpb.pweb2.venus.model.Aluno;
 import br.edu.ifpb.pweb2.venus.model.Assunto;
@@ -19,8 +24,11 @@ import br.edu.ifpb.pweb2.venus.model.Colegiado;
 import br.edu.ifpb.pweb2.venus.model.Curso;
 import br.edu.ifpb.pweb2.venus.model.Professor;
 import br.edu.ifpb.pweb2.venus.model.User;
+import br.edu.ifpb.pweb2.venus.model.Voto;
 import br.edu.ifpb.pweb2.venus.repository.UserRepository;
 import br.edu.ifpb.pweb2.venus.service.AdminService;
+import br.edu.ifpb.pweb2.venus.ui.NavPage;
+import br.edu.ifpb.pweb2.venus.ui.NavePageBuilder;
 import jakarta.validation.Valid;
 
 
@@ -50,9 +58,15 @@ public class AdminController {
     }
     
     @GetMapping("/alunos")
-    public ModelAndView getAlunos(ModelAndView mav) {
+    public ModelAndView getAlunos(ModelAndView mav, @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "3") int size) {
+        Pageable paging = PageRequest.of(page - 1, size);
+        Page<Aluno> pageAlunos = adminService.listAluno(paging);
+        NavPage navPage = NavePageBuilder.newNavPage(pageAlunos.getNumber() + 1,
+                pageAlunos.getTotalElements(), pageAlunos.getTotalPages(), size);
         mav.setViewName("admin/listAluno");
-        mav.addObject("alunos", adminService.listAluno());
+        mav.addObject("alunos", pageAlunos);
+        mav.addObject("navPage", navPage);
         return mav;
     }
 
@@ -83,18 +97,25 @@ public class AdminController {
         return mav;
     }
 
-    @DeleteMapping("/alunos/{id}")
-    public ModelAndView deleteAluno(@PathVariable(value = "id") Integer id, ModelAndView mav) {
+    @GetMapping("/alunos/{id}/delete")
+    public ModelAndView deleteById(@PathVariable(value = "id") Integer id, ModelAndView mav
+    , RedirectAttributes attr) {
         adminService.removerAluno(id);
+        attr.addFlashAttribute("mensagem", "Aluno removido com sucesso!");
         mav.setViewName("redirect:/admin/alunos");
-        mav.addObject("alunos", adminService.listAluno());
         return mav;
     }
 
     @GetMapping("/professores")
-    public ModelAndView getProfessores(ModelAndView mav) {
+    public ModelAndView getProfessores(ModelAndView mav, @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "3") int size) {
+            Pageable paging = PageRequest.of(page - 1, size);
+        Page<Professor> pageProfessores = adminService.listProfessor(paging);
+        NavPage navPage = NavePageBuilder.newNavPage(pageProfessores.getNumber() + 1,
+                pageProfessores.getTotalElements(), pageProfessores.getTotalPages(), size);
         mav.setViewName("admin/listProfessor");
-        mav.addObject("professores", adminService.listarProfessores());
+        mav.addObject("professores", pageProfessores);
+        mav.addObject("navPage", navPage);
         return mav;
     }
 
@@ -125,20 +146,27 @@ public class AdminController {
         return mav;
     }
 
-    @DeleteMapping("/professores/{id}")
-    public ModelAndView deleteProfessor(@PathVariable(value = "id") Integer id, ModelAndView mav) {
+    @GetMapping("/professores/{id}/delete")
+    public ModelAndView deleteProfessor(@PathVariable(value = "id") Integer id,
+     ModelAndView mav, RedirectAttributes attr) {
         adminService.removerProfessor(id);
+        attr.addFlashAttribute("mensagem", "Professor removido com sucesso!");
         mav.setViewName("redirect:/admin/professores");
-        mav.addObject("professores", adminService.listarProfessores());
         return mav;
     }
 
     @GetMapping("/colegiados")
-    public ModelAndView getColegiados(ModelAndView mav) {
-        mav.setViewName("admin/listColegiado");
-        mav.addObject("colegiados", adminService.listarColegiado());
-        return mav;
-    }
+public ModelAndView getColegiados(ModelAndView mav, @RequestParam(defaultValue = "1") int page,
+        @RequestParam(defaultValue = "3") int size) {
+    Pageable paging = PageRequest.of(page - 1, size);
+    Page<Colegiado> pageColegiados = adminService.listColegiado(paging);
+    NavPage navPage = NavePageBuilder.newNavPage(pageColegiados.getNumber() + 1,
+            pageColegiados.getTotalElements(), pageColegiados.getTotalPages(), size);
+    mav.setViewName("admin/listColegiado");
+    mav.addObject("colegiados", pageColegiados);
+    mav.addObject("navPage", navPage);
+    return mav;
+}
 
     @GetMapping("/colegiados/{id}")
     public ModelAndView editarColegiado(@PathVariable(value = "id") Integer id, ModelAndView mav) {
@@ -167,28 +195,28 @@ public class AdminController {
         return mav;
     }
 
-    @DeleteMapping("/colegiados/{id}")
-    public ModelAndView deleteColegiado(@PathVariable(value = "id") Integer id, ModelAndView mav) {
+    @GetMapping("/colegiados/{id}/delete")
+    public ModelAndView deleteColegiado(@PathVariable(value = "id") Integer id,
+     ModelAndView mav, RedirectAttributes attr) {
         adminService.removerColegiado(id);
+        attr.addFlashAttribute("mensagem", "Colegiado removido com sucesso!");
         mav.setViewName("redirect:/admin/colegiados");
-        mav.addObject("colegiado", adminService.listarColegiado());
         return mav;
     }
 
-    @GetMapping("/colegiados/{id}/membros")
+    @GetMapping("/colegiados/membros/{id}")
     public ModelAndView getAddMembros(@PathVariable(value = "id") Integer id, ModelAndView mav) {
         mav.setViewName("admin/formMembro");
         mav.addObject("colegiadoId", id);
-        mav.addObject("professores", adminService.listarProfessores());
+        mav.addObject("professores", adminService.listarProfessoresCurso(id));
         return mav;
     }
 
     @PostMapping("/colegiados/membros")
     public ModelAndView salvarMembro(Integer idColegiado, Integer idProfessor, ModelAndView mav) {
         adminService.adicionarMembro(idColegiado, idProfessor);
-        mav.setViewName("redirect:/admin/colegiados/" + idColegiado + "/membros");
+        mav.setViewName("redirect:/admin/colegiados/membros/" + idColegiado );
         return mav;
-
     }
 
     @DeleteMapping("/colegiados/{id}/membros/{idProfessor}")
@@ -201,11 +229,17 @@ public class AdminController {
     }
 
     @GetMapping("/cursos")
-    public ModelAndView getCursos(ModelAndView mav) {
-        mav.setViewName("admin/listCurso");
-        mav.addObject("cursos", adminService.listarCursos());
-        return mav;
-    }
+public ModelAndView getCursos(ModelAndView mav, @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "3") int size) {
+    Pageable paging = PageRequest.of(page - 1, size);
+        Page<Curso> pageCursos = adminService.listCurso(paging);
+        NavPage navPage = NavePageBuilder.newNavPage(pageCursos.getNumber() + 1,
+                pageCursos.getTotalElements(), pageCursos.getTotalPages(), size);
+    mav.setViewName("admin/listCurso");
+    mav.addObject("cursos", pageCursos);
+        mav.addObject("navPage", navPage);
+    return mav;
+}
 
     @GetMapping("/cursos/cadastro")
     public ModelAndView getCadastro(ModelAndView mav) {
@@ -234,11 +268,12 @@ public class AdminController {
         return mav;
     }
 
-    @DeleteMapping("/cursos/{id}")
-    public ModelAndView deleteCurso(@PathVariable(value = "id") Integer id, ModelAndView mav) {
+    @GetMapping("/cursos/{id}/delete")
+    public ModelAndView deleteCurso(@PathVariable(value = "id") Integer id,
+     ModelAndView mav, RedirectAttributes attr) {
         adminService.removerCurso(id);
+        attr.addFlashAttribute("mensagem", "Curso removido com sucesso!");
         mav.setViewName("redirect:/admin/cursos");
-        mav.addObject("cursos", adminService.listarCursos());
         return mav;
     }
 
@@ -247,10 +282,21 @@ public class AdminController {
         return adminService.listarCursos();
     }
 
+    @ModelAttribute("professores")
+    public List<Professor> getProfessores() {
+        return adminService.listarProfessores();
+    }
+
     @GetMapping("/assuntos")
-    public ModelAndView getAssuntos(ModelAndView mav) {
+    public ModelAndView getAssuntos(ModelAndView mav, @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "3") int size) {
+        Pageable paging = PageRequest.of(page - 1, size);
+        Page<Assunto> pageAssuntos = adminService.listAssunto(paging);
+        NavPage navPage = NavePageBuilder.newNavPage(pageAssuntos.getNumber() + 1,
+                pageAssuntos.getTotalElements(), pageAssuntos.getTotalPages(), size);
         mav.setViewName("admin/listAssunto");
-        mav.addObject("assuntos", adminService.listAssunto());
+        mav.addObject("assuntos", pageAssuntos);
+        mav.addObject("navPage", navPage);
         return mav;
     }
 
@@ -282,11 +328,54 @@ public class AdminController {
     }
 
 
-    @DeleteMapping("/assuntos/{id}")
-    public ModelAndView deleteAssunto(@PathVariable(value = "id") Integer id, ModelAndView mav) {
-        adminService.removerAssunto(id);
+    @GetMapping("/assuntos/{id}/delete")
+    public ModelAndView deleteAssunto(@PathVariable(value = "id") Integer id,
+     ModelAndView mav, RedirectAttributes attr) {
+        adminService.removerProfessor(id);
+        attr.addFlashAttribute("mensagem", "Assunto removido com sucesso!");
         mav.setViewName("redirect:/admin/assuntos");
-        mav.addObject("assuntos", adminService.listAssunto());
+        return mav;
+    }
+
+    @GetMapping("/votos")
+    public ModelAndView getVotos(ModelAndView mav) {
+        mav.setViewName("admin/listVoto");
+        mav.addObject("votos", adminService.listVotos());
+        return mav;
+    }
+
+    @GetMapping("/votos/cadastro")
+    public ModelAndView getCadastroVoto(ModelAndView mav) {
+        mav.setViewName("admin/formVoto");
+        mav.addObject("voto", new Voto());
+        return mav;
+    }
+
+    @PostMapping("/votos")
+    public ModelAndView saveVoto(@Valid Voto voto, BindingResult result, ModelAndView mav) {
+        if (result.hasErrors()) {
+            mav.setViewName("admin/formVoto");
+            mav.addObject("voto", voto);
+            return mav;
+        }
+        adminService.saveVoto(voto);
+        mav.setViewName("redirect:/admin/votos");
+        mav.addObject("votos", adminService.listVotos());
+        return mav;
+    }
+
+    @GetMapping("/votos/{id}")
+    public ModelAndView editVoto(@PathVariable(value = "id") Integer id, ModelAndView mav) {
+        mav.setViewName("admin/formVoto");
+        mav.addObject("voto", adminService.getVoto(id));
+        return mav;
+    }
+
+    @GetMapping("/votos/{id}/delete")
+    public ModelAndView deleteVoto(@PathVariable(value = "id") Integer id, ModelAndView mav, RedirectAttributes attr) {
+        adminService.removerVoto(id);
+        attr.addFlashAttribute("mensagem", "Voto removido com sucesso!");
+        mav.setViewName("redirect:/admin/votos");
         return mav;
     }
 

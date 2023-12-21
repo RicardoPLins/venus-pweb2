@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}" th:with="titulo='Cadastro de Assunto'">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -32,6 +32,8 @@
     </style>
 </head>
 <body>
+    <div layout:fragment="content">
+
     <div>
         <h1>Vênus</h1>
         <p>Este é o Vênus, o seu app de colegiado muito mais fácil e rápido.</p>
@@ -41,9 +43,11 @@
         <nav>
             <ul>
                 <li><a href="#">Processos</a></li>
+                <li><a href="#">Votos Profesores</a></li>
                 <li><a href="#">Reuniões</a></li>
                 <li><a href="#">Colegiados</a></li>
                 <li><a href="#">Usuários</a></li>
+                <li><a href="#">Votos</a></li>
             </ul>
         </nav>
     </header>

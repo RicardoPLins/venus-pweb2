@@ -1,72 +1,82 @@
-<!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}" th:with="titulo='Cadastro de Colegiado'">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}"
+    th:with="titulo='Colegiados'">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Document</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/js/all.min.js"></script>
+    </head>
 
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <body>
+        <div layout:fragment="content">
+            <br />
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <form th:action="@{/admin/colegiados/cadastro}" method="GET">
+                <button class="btn btn-primary" type="submit">Novo</button>
+            </form>
 
-  <title>Admin</title>
+            <br />
+            <h1>Lista de Colegiados</h1>
 
-</head>
-<body>
+            <div th:if="${not #lists.isEmpty(colegiados)}">
+                <div th:text="'Total ' + ${#lists.size(colegiados)} + ' colegiados'"
+                    style="text-align: right; color: gray; font-size: 0.85em;" />
 
-  <div layout:fragment="content">
-    <form th:action="@{/admin/colegiados/cadastro}" method="GET">
-        <button class="btn btn-primary" type="submit">Novo</button>
-    </form>
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>Id</th>
+                            <th>Data de Início</th>
+                            <th>Data de Fim</th>
+                            <th>Descrição</th>
+                            <th>Portaria</th>
+                            <th>Curso</th>
+                            <th>Membros</th>
+                            <th>Adicionar Membros</th>
+                            <th>Alterar</th>
+                            <th>Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="colegiado : ${colegiados}">
+                            <td th:text="${colegiado.id}"></td>
+                            <td th:text="${colegiado.dataInicio}"></td>
+                            <td th:text="${colegiado.dataFim}"></td>
+                            <td th:text="${colegiado.descricao}"></td>
+                            <td th:text="${colegiado.portaria}"></td>
+                            <td th:text="${colegiado.curso.nome}"></td>
+                            <td>
+                                <ul>
+                                    <li th:each="professor : ${colegiado.membros}" th:text="${professor.nome}"></li>
+                                </ul>
+                            </td>
+                            <td>
+                                <a th:href="@{/admin/colegiados/membros/{id}(id=${colegiado.id})}" class="btn btn-secondary" data-id="${colegiado.id}">
+                                    adicionar
+                                </a>
+                            </td>
+                            
+                            <td>
+                                <a th:href="@{/admin/colegiados/{id}(id=${colegiado.id})}" class="btn btn-warning" data-id="${colegiado.id}">
+                                    <i class="fas fa-pencil-square-o"></i>
+                                </a>
+                            </td>
+                            <td>
+                                <form th:action="@{/admin/colegiados/{id}/delete(id=${colegiado.id})}">
+                                    <button class="btn btn-primary btn-sm" type="submit">Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
 
-    <div id="main">
-        <div>
-          <h2>COLEGIADO</h2>
-          <table class="table" id="tabela">
-            <thead>
-              <tr>
-                <th>Curso</th>
-                <th>Portaria</th>
-                <th>Alterar</th>
-                <th>Excluir</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr th:each="colegiado : ${colegiados}">
-                <td th:text="${colegiado.curso}">Sistemas para Internet</td>
-                <th th:text="${colegiado.portaria}">111111111</th>
-                <td>
-                    <a th:href="@{/admin/colegiados/{id}(id=${colegiado.id})}" class="btn btn-warning" data-id="[[${colegiado.id}]]">
-                        <i class="fad fa-pencil-square-o"></i>
-                    </a>
-                </td>
-                <td>
-                  <button class="btn btn-danger" data-id="[[${colegiado.id}]]" th:onclick="|deletar(${colegiado.id})|">
-                      <i class="fas fa-trash"></i>
-                  </button>
-              </td>
-              
-            </tr>
-          
-              </tr>
-            </tbody>
-          </table>
+                <div th:replace="~{/fragments/paging :: paginator('admin/colegiados', ${navPage})}" />
+            </div>
         </div>
-    </div>
-  </div>
-  <script>
-    function deletar(colegiadoId) {
-        console.log(`${window.location.href}/${colegiadoId}`);
-        fetch(`${window.location.href}/${colegiadoId}` , {
-            method: 'DELETE',
-        })
-            .then(() => {
-                window.location.reload();
-            })
-    }
+    </body>
 
-</script>
-
-</body>
 </html>

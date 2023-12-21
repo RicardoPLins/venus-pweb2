@@ -11,6 +11,11 @@
   <title>Admin</title>
 </head>
 <body>
+  <div id="cabecalho">
+    <div></div>
+    <div><h3>CURSOS</h3></div>
+    <div></div>
+  </div>
 
   <div layout:fragment="content">
     <form th:action="@{/admin/cursos/cadastro}" method="GET">
@@ -37,13 +42,15 @@
                 </a>
                 </td>
                 <td>
-                  <a href="#" class="btn btn-danger delete-button" data-id="[[${curso.id}]]">
-                    <i class="fas fa-trash"></i>
-                </a>
-                </td>
+                  <form th:action="@{/admin/cursos/{id}/delete(id=${curso.id})}">
+                      <button class="btn btn-primary btn-sm" type="submit">Excluir</button>
+                  </form>
+              </td>
               </tr>
             </tbody>
           </table>
+
+          <div th:replace="~{/fragments/paging :: paginator('admin/cursos', ${navPage})}" />
         </div>
     </div>
   </div>

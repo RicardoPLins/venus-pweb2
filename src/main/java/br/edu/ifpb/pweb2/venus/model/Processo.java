@@ -24,6 +24,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Entity
 public class Processo {
+    
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
@@ -43,12 +44,22 @@ public class Processo {
 
     private TipoDecisao decisaoRelator;
 
-    @NotBlank(message = "Campo Obrigatório!")
+    private TipoVoto voto;
+
+    // @NotBlank(message = "Campo Obrigatório!")
     @Size(min=5, max = 40, message = "O requerimento deve ter no min 5 e max 40")
-    private String texto;
+    private String  texto;
+
+    // @NotBlank(message = "Campo Obrigatório!")
+    @Size(min=5, max = 40, message = "O requerimento deve ter no min 5 e max 40")
+    private String justificativa;
 
     @Enumerated(EnumType.STRING)
     private StatusEnum status;
+
+    @ManyToOne
+    @JoinColumn(name = "id_professor")
+    private Professor relator;
 
     @OneToOne
     @JoinColumn(name = "id_assunto")
@@ -64,6 +75,10 @@ public class Processo {
 
     public Processo(Assunto assunto) {
         this.assunto = assunto;
+    }
+
+    public void setRelator(Professor professor) {
+        this.relator = professor;
     }
 
     public void setTipoDecisao(TipoDecisao decisaoRelator) {

@@ -1,17 +1,18 @@
 package br.edu.ifpb.pweb2.venus.controller;
 
 import java.security.Principal;
-import java.security.Security;
 import java.util.List;
 
-import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,13 +20,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.edu.ifpb.pweb2.venus.model.Aluno;
 import br.edu.ifpb.pweb2.venus.model.Assunto;
 import br.edu.ifpb.pweb2.venus.model.Processo;
-import br.edu.ifpb.pweb2.venus.model.Professor;
-import br.edu.ifpb.pweb2.venus.model.Usuario;
+import br.edu.ifpb.pweb2.venus.repository.AssuntoRepository;
+import br.edu.ifpb.pweb2.venus.repository.ProcessoRepository;
 import br.edu.ifpb.pweb2.venus.service.AlunoService;
+import br.edu.ifpb.pweb2.venus.ui.NavPage;
+import br.edu.ifpb.pweb2.venus.ui.NavePageBuilder;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -36,14 +39,26 @@ public class AlunoController {
     @Autowired
     private AlunoService alunoService;
 
+    @Autowired
+    private ProcessoRepository processoRepository;
+
+    @Autowired
+    private AssuntoRepository assuntoRepository;
+
     @GetMapping("/processos")
-    public ModelAndView getProcessos(ModelAndView mav, Principal principal) {
-        mav.setViewName("alunos/listProcesso");
-        mav.addObject("processos", alunoService.consultarProcessos(principal));
-        return mav;
+    public ModelAndView processos(ModelAndView mav, @RequestParam(defaultValue = "1") int page,
+        @RequestParam(defaultValue = "4") int size) {
+    Pageable paging = PageRequest.of(page - 1, size);
+    Page<Processo> pageProcessos = alunoService.listProcessos(paging);
+    NavPage navPage = NavePageBuilder.newNavPage(pageProcessos.getNumber() + 1,
+            pageProcessos.getTotalElements(), pageProcessos.getTotalPages(), size);
+    mav.setViewName("alunos/listProcesso");
+    mav.addObject("processos", pageProcessos);
+    mav.addObject("navPage", navPage);
+    return mav;
     }
 
-    @ModelAttribute("assuntoItems")
+    @ModelAttribute("assuntos")
     public List<Assunto> getAssuntos() {
         return alunoService.listAssunto();
     }
@@ -80,19 +95,31 @@ public class AlunoController {
         return mav;
     }
 
-    @GetMapping("/processo/consultar")
-    public ModelAndView filtrarProcesso(@RequestParam(name = "status", defaultValue = "") String filtro, @RequestParam(name = "ordem", defaultValue = "") String ordem, ModelAndView modelAndView, Principal principal) {
-        modelAndView.addObject("processos", alunoService.filtroProcessos(principal, filtro, ordem));
-        modelAndView.setViewName("/aluno/listProcesso");
-        return modelAndView;
+    @GetMapping("/processos/{id}/delete")
+    public ModelAndView deleteProcesso(@PathVariable(value = "id") Integer id, ModelAndView mav, RedirectAttributes attr) {
+        alunoService.removerProcesso(id);
+        attr.addFlashAttribute("mensagem", "Processo removido com sucesso!");
+        mav.setViewName("redirect:/alunos/processos");
+        return mav;
     }
 
-    // @DeleteMapping("/processos/{id}")
-    // public ModelAndView deleteAluno(@PathVariable(value = "id") Integer id, ModelAndView mav) {
-    //     alunoService.removerProcesso(id);
-    //     mav.setViewName("redirect:/alunos/processos");
-    //     mav.addObject("processos", alunoService.listProcesso(id));
-    //     return mav;
-    // }
+@RequestMapping("/processos/qm")
+public String queryMethods(String tipo, Integer assuntoId, Model model) {
+    List<Processo> processos = null;
+    switch (tipo) {
+        case "findByAssunto":
+            Assunto assunto = assuntoRepository.findById(assuntoId).orElse(null);
+            if (assunto != null) {
+                processos = processoRepository.findByAssunto(assunto);
+            }
+            break;
+        // Outros casos de consulta
+        default:
+            break;
+    }
+    model.addAttribute("processos", processos);
+    return "alunos/listProcesso";
+}
+
 
 }

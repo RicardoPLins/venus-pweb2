@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout_professor}" th:with="titulo='Listagem de Reuniões'">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordenador</title>
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div layout:fragment="content" class="container">
+        <form th:action="@{/professores/reunioes/qm}" method="GET">
+            <div class="form-group">
+                <label for="tipo">Consultar por:</label>
+                <select name="tipo" id="tipo" class="form-select">
+                    <option value="findByStatus">Status</option>
+                    <!-- Outras opções de consulta -->
+                </select>
+            </div>
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="status">Status:</label>
+                <select name="status" id="status" class="form-select">
+                    <option value="">Todos</option> <!-- Opção para mostrar todas as reuniões -->
+                    <option value="PROGRAMADA">Programada</option>
+                    <option value="ENCERRADA">Encerrada</option>
+                    <!-- Adicione mais opções se necessário -->
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Consultar</button>
+        </form>
+        <br>
+
+        <div id="main">
+            <h2>REUNIÕES</h2>
+            <table class="table" id="tabela">
+                <thead>
+                    <tr>
+                        <th scope="col">Data</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Pauta</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Preencha esta seção com os detalhes das reuniões -->
+                    <tr th:each="reuniao : ${reunioes}">
+                        <td th:text="${reuniao.dataReuniao}" scope="row"></td>
+                        <td th:text="${reuniao.status}" scope="row"></td>
+                        <!-- Aqui, talvez seja necessário percorrer os processos da reunião -->
+                        <td>
+                            <ul>
+                                <li th:each="processo : ${reuniao.processos}" th:text="${processo.texto}"></li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <!-- Fim da iteração das reuniões -->
+                </tbody>
+            </table>
+
+            <div th:replace="~{/fragments/paging :: paginator('professores/reunioes', ${navPage})}" />
+
+        </div>
+    </div>
+</body>
+</html>

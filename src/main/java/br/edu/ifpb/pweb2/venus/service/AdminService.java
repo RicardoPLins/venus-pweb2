@@ -1,10 +1,13 @@
 package br.edu.ifpb.pweb2.venus.service;
+
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,6 +20,7 @@ import br.edu.ifpb.pweb2.venus.model.Colegiado;
 import br.edu.ifpb.pweb2.venus.model.Curso;
 import br.edu.ifpb.pweb2.venus.model.Professor;
 import br.edu.ifpb.pweb2.venus.model.User;
+import br.edu.ifpb.pweb2.venus.model.Voto;
 import br.edu.ifpb.pweb2.venus.repository.AlunoRepository;
 import br.edu.ifpb.pweb2.venus.repository.AssuntoRepository;
 import br.edu.ifpb.pweb2.venus.repository.AuthorityRepository;
@@ -25,6 +29,7 @@ import br.edu.ifpb.pweb2.venus.repository.CursoRepository;
 // import br.edu.ifpb.pweb2.venus.repository.CursoRepository;
 import br.edu.ifpb.pweb2.venus.repository.ProfessorRepository;
 import br.edu.ifpb.pweb2.venus.repository.UserRepository;
+import br.edu.ifpb.pweb2.venus.repository.VotoRepository;
 
 @Service
 public class AdminService {
@@ -35,8 +40,8 @@ public class AdminService {
     private ProfessorRepository professorRepository;
 
     @Autowired
-    private ColegiadoRepository colegiadoRepository; 
-    
+    private ColegiadoRepository colegiadoRepository;
+
     @Autowired
     private CursoRepository cursoRepository;
 
@@ -49,6 +54,9 @@ public class AdminService {
     @Autowired
     private AuthorityRepository authorityRepository;
 
+    @Autowired
+    private VotoRepository votoRepository;
+
     @Transactional
     public void removerAluno(Integer id) {
         alunoRepository.deleteById(id);
@@ -58,31 +66,35 @@ public class AdminService {
     public void saveAluno(Aluno aluno) {
         PasswordEncoder hash = new BCryptPasswordEncoder();
         if (aluno.getId() == null) {
-        // Novo registro de estudante
-        String senhaCriptograda = hash.encode((CharSequence)aluno.getSenha());
-        aluno.setSenha(senhaCriptograda);
-        User user = new User(aluno.getLogin(), senhaCriptograda);
-        user.setAuthorities(Collections.singletonList(new Authority(user, "ROLE_ALUNO")));
-        user.setEnabled(true);
-        aluno.setUser(user);
-        alunoRepository.save(aluno);
-    }
+            // Novo registro de estudante
+            String senhaCriptograda = hash.encode((CharSequence) aluno.getSenha());
+            aluno.setSenha(senhaCriptograda);
+            User user = new User(aluno.getLogin(), senhaCriptograda);
+            user.setAuthorities(Collections.singletonList(new Authority(user, "ROLE_ALUNO")));
+            user.setEnabled(true);
+            aluno.setUser(user);
+            alunoRepository.save(aluno);
+        }
     }
 
     // @Transactional
     // public void saveUser(User user, Integer id) {
-    //     Aluno aluno = alunoRepository.findById(id).get();
-    //     String login = aluno.getLogin();
-    //     String password = aluno.getSenha();
-    //     user = userRepository.findByUsername(login);
-    //     user = new User(login, password, true, null);
-    //     user.addAuthority("ROLE_ALUNO");
+    // Aluno aluno = alunoRepository.findById(id).get();
+    // String login = aluno.getLogin();
+    // String password = aluno.getSenha();
+    // user = userRepository.findByUsername(login);
+    // user = new User(login, password, true, null);
+    // user.addAuthority("ROLE_ALUNO");
 
-    //     userRepository.save(user);
+    // userRepository.save(user);
     // }
 
     public List<Aluno> listAluno() {
         return alunoRepository.findAll();
+    }
+
+    public Page<Aluno> listAluno(Pageable p) {
+        return alunoRepository.findAll(p);
     }
 
     public Optional<Aluno> getAluno(Integer id) {
@@ -94,19 +106,58 @@ public class AdminService {
         professorRepository.deleteById(id);
     }
 
+    // @Transactional
+    // public void salvarProfessor(Professor professor) {
+    // professorRepository.save(professor);
+    // }
     @Transactional
     public void salvarProfessor(Professor professor) {
-        professorRepository.save(professor);
+        PasswordEncoder hash = new BCryptPasswordEncoder();
+
+        if(professor.getCoordenador() == true){
+            professor.setCoordenador(true);
+            String senhaCriptograda = hash.encode((CharSequence) professor.getSenha());
+            professor.setSenha(senhaCriptograda);
+            User user = new User(professor.getLogin(), senhaCriptograda);
+            user.setAuthorities(Collections.singletonList(new Authority(user, "ROLE_COORDENADOR")));
+            user.setEnabled(true);
+            professor.setUser(user);
+            professorRepository.save(professor);
+        }
+        else{
+            professor.setCoordenador(false);
+            String senhaCriptograda = hash.encode((CharSequence) professor.getSenha());
+            professor.setSenha(senhaCriptograda);
+            User user = new User(professor.getLogin(), senhaCriptograda);
+            user.setAuthorities(Collections.singletonList(new Authority(user, "ROLE_PROFESSOR")));
+            user.setEnabled(true);
+            professor.setUser(user);
+            professorRepository.save(professor);
+        }
+        // if (professor.getId() == null) {
+        //     // Novo registro de estudante
+        //     String senhaCriptograda = hash.encode((CharSequence) professor.getSenha());
+        //     professor.setSenha(senhaCriptograda);
+        //     User user = new User(professor.getLogin(), senhaCriptograda);
+        //     user.setAuthorities(Collections.singletonList(new Authority(user, "ROLE_PROFESSOR")));
+        //     user.setEnabled(true);
+        //     professor.setUser(user);
+        //     professorRepository.save(professor);
+        // }
     }
 
     public List<Professor> listarProfessores() {
         return professorRepository.findAll();
     }
 
+    public Page<Professor> listProfessor(Pageable p) {
+        return professorRepository.findAll(p);
+    }
+
     public Optional<Professor> getProfessor(Integer id) {
         return professorRepository.findById(id);
     }
-    
+
     @Transactional
     public void removerColegiado(Integer id) {
         colegiadoRepository.deleteById(id);
@@ -121,8 +172,21 @@ public class AdminService {
         return colegiadoRepository.findAll();
     }
 
-    public Optional<Colegiado> getColegiado(Integer id) {
-        return colegiadoRepository.findById(id);
+    public Page<Colegiado> listColegiado(Pageable p) {
+        return colegiadoRepository.findAll(p);
+    }
+
+    public  Colegiado getColegiado(Integer id) {
+        return colegiadoRepository.findById(id).orElse(null);
+    }
+
+    public List<Professor> listarProfessoresCurso(Integer id) {
+        Colegiado colegiado = getColegiado(id);
+        List<Professor> listProfessores = new ArrayList<Professor>();
+        professorRepository.findAllByCursoId(colegiado.getCurso().getId())
+                .forEach(listProfessores::add);
+
+        return listProfessores;
     }
 
     @Transactional
@@ -144,7 +208,6 @@ public class AdminService {
         colegiadoRepository.save(colegiado);
     }
 
-
     @Transactional
     public void salvarCurso(Curso curso) {
         cursoRepository.save(curso);
@@ -165,6 +228,10 @@ public class AdminService {
         return cursoRepository.findAll();
     }
 
+    public Page<Curso> listCurso(Pageable p) {
+        return cursoRepository.findAll(p);
+    }
+
     public Curso getCurso(Integer id) {
         return cursoRepository.findById(id).orElse(null);
     }
@@ -173,6 +240,7 @@ public class AdminService {
     public void removerAssunto(Integer id) {
         assuntoRepository.deleteById(id);
     }
+
     @Transactional
     public void saveAssunto(Assunto assunto) {
         assuntoRepository.save(assunto);
@@ -182,11 +250,35 @@ public class AdminService {
         return assuntoRepository.findAll();
     }
 
+    public Page<Assunto> listAssunto(Pageable p) {
+        return assuntoRepository.findAll(p);
+    }
+
     public Optional<Assunto> getAssunto(Integer id) {
         return assuntoRepository.findById(id);
     }
 
-    public List<User> findEnabledUsers(){
+    public List<User> findEnabledUsers() {
         return userRepository.findByEnabledTrue();
     }
+
+    public List<Voto> listVotos() {
+        return votoRepository.findAll();
+    }
+
+    @Transactional
+    public void removerVoto(Integer id) {
+        votoRepository.deleteById(id);
+    }
+
+    @Transactional
+    public void saveVoto(Voto voto) {
+        votoRepository.save(voto);
+    }
+
+    public Optional<Voto> getVoto(Integer id) {
+        return votoRepository.findById(id);
+    }
+
+    
 }

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout_professor}" th:with="titulo='Processos de professor'">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <title>Processos</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div class="container">
+            <form action="/professores/processos"></form>
+
+        </div>
+
+
+        <div id="main">
+            <h1>Processos</h1>
+            <table class="table" id="tabela">
+                <thead>
+                    <tr>
+                        <th scope="col">Numero</th>
+                        <th scope="col">Votar</th>
+                        <th scope="col">Assunto</th>
+                        <th scope="col">Voto</th>
+                        <th scope="col">Justificativa</th>
+                        <th scope="col">Documento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="processo : ${processos}" th:object="${processo}">
+                        <td th:text="${processo.numero}"></td>
+                        <td>
+                            <a th:href="@{/professores/processos/{id}(id=${processo.id})}" class="btn btn-primary edit-button" data-id="[[${processo.id}]]">
+                                <i class="fas fa-edit"></i> Votar
+                            </a>
+                        </td>
+                        <td th:text="${processo.assunto.nome}"></td>
+                        <td th:text="${processo.voto}"></td>
+                        <td th:text="${processo.justificativa}"></td>
+                        <td>
+                            <span th:if="${processo.parecer == 0}">Sem documentos</span>
+                            <a th:unless="${processo.parecer == 0}" href="#">Documento</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div th:replace="~{/fragments/paging :: paginator('professores/processos', ${navPage})}" />
+        </div>
+    </div>
+</div>
+</body>
+</html>

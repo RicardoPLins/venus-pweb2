@@ -1,4 +1,4 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}" th:with="titulo='Cadastro de Processo'">
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout_aluno}" th:with="titulo='Cadastro de Processo'">
 <head>
     <title th:text="${titulo}">Cadastro de Processo</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
@@ -24,7 +24,7 @@
             <div class="form-group mx-sm-3 mb-2">
                 <label for="assunto">Assunto:</label>
                 <select th:field="*{assunto}" class="form-select  mb-2">
-                    <option th:each="ass : ${assuntoItems}" th:value="${ass.id}" th:text="${ass.nome}" />
+                    <option th:each="ass : ${assuntos}" th:value="${ass.id}" th:text="${ass.nome}" />
                 </select>
                 <p th:if="${#fields.hasErrors('assunto.id')}" th:errorclass="error" 
                     th:errors="*{assunto.id}" class="alert alert-danger" />

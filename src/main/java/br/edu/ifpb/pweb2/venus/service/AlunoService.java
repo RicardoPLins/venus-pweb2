@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,6 +15,7 @@ import br.edu.ifpb.pweb2.venus.model.Aluno;
 import br.edu.ifpb.pweb2.venus.model.Assunto;
 import br.edu.ifpb.pweb2.venus.model.Processo;
 import br.edu.ifpb.pweb2.venus.model.StatusEnum;
+import br.edu.ifpb.pweb2.venus.model.TipoDecisao;
 import br.edu.ifpb.pweb2.venus.repository.AlunoRepository;
 import br.edu.ifpb.pweb2.venus.repository.AssuntoRepository;
 import br.edu.ifpb.pweb2.venus.repository.ProcessoRepository;
@@ -44,18 +47,21 @@ public class AlunoService {
 
         Date dataRecepcao = new Date();
         processo.setStatus(StatusEnum.CRIADO);
-        processo.setTipoDecisao(null);
+        processo.setTipoDecisao(TipoDecisao.DEFERIMENTO);
         processo.setParticipante(aluno);
 
         processo.setCurso(aluno.getCurso());
         processo.setDataRecepcao(dataRecepcao);
         
         processoRepository.save(processo);
-        
     }
 
     public List<Processo> listProcesso() {
         return processoRepository.findAll();
+    }
+
+    public Page<Processo> listProcessos(Pageable p) {
+        return processoRepository.findAll(p);
     }
 
     public List<Assunto> listAssunto() {
@@ -70,12 +76,10 @@ public class AlunoService {
         return alunoRepository.findById(id).get();
     }
 
-    public List<Processo> consultarProcessos(Principal user){
+    public List<Processo> consultaProcessos(Principal user){
         return processoRepository.findAllByParticipanteLogin(user.getName());
     }
 
-    public List<Processo> filtroProcessos(Principal principal, String filtro, String ordem) {
-        return null;
-    }
+    
 
 }
