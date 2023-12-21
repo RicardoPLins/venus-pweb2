@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -91,6 +93,10 @@ public class AdminService {
         return alunoRepository.findAll();
     }
 
+    public Page<Aluno> listAluno(Pageable p) {
+        return alunoRepository.findAll(p);
+    }
+
     public Optional<Aluno> getAluno(Integer id) {
         return alunoRepository.findById(id);
     }
@@ -144,6 +150,10 @@ public class AdminService {
         return professorRepository.findAll();
     }
 
+    public Page<Professor> listProfessor(Pageable p) {
+        return professorRepository.findAll(p);
+    }
+
     public Optional<Professor> getProfessor(Integer id) {
         return professorRepository.findById(id);
     }
@@ -160,6 +170,10 @@ public class AdminService {
 
     public List<Colegiado> listarColegiado() {
         return colegiadoRepository.findAll();
+    }
+
+    public Page<Colegiado> listColegiado(Pageable p) {
+        return colegiadoRepository.findAll(p);
     }
 
     public  Colegiado getColegiado(Integer id) {
@@ -214,6 +228,10 @@ public class AdminService {
         return cursoRepository.findAll();
     }
 
+    public Page<Curso> listCurso(Pageable p) {
+        return cursoRepository.findAll(p);
+    }
+
     public Curso getCurso(Integer id) {
         return cursoRepository.findById(id).orElse(null);
     }
@@ -230,6 +248,10 @@ public class AdminService {
 
     public List<Assunto> listAssunto() {
         return assuntoRepository.findAll();
+    }
+
+    public Page<Assunto> listAssunto(Pageable p) {
+        return assuntoRepository.findAll(p);
     }
 
     public Optional<Assunto> getAssunto(Integer id) {

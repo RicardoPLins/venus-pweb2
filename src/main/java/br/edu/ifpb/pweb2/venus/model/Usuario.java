@@ -33,6 +33,7 @@ public class Usuario {
     private String fone;
     
     @NotBlank(message="Campo obrigatório")
+    @Matricula
     private String matricula;
     
     @NotBlank(message="Campo obrigatório")

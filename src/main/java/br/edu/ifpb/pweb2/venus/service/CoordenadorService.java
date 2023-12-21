@@ -6,15 +6,21 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.edu.ifpb.pweb2.venus.model.Aluno;
+import br.edu.ifpb.pweb2.venus.model.Assunto;
 import br.edu.ifpb.pweb2.venus.model.Colegiado;
 import br.edu.ifpb.pweb2.venus.model.Processo;
 import br.edu.ifpb.pweb2.venus.model.Professor;
 import br.edu.ifpb.pweb2.venus.model.Reuniao;
 import br.edu.ifpb.pweb2.venus.model.StatusEnum;
 import br.edu.ifpb.pweb2.venus.model.StatusReuniao;
+import br.edu.ifpb.pweb2.venus.repository.AlunoRepository;
+import br.edu.ifpb.pweb2.venus.repository.AssuntoRepository;
 import br.edu.ifpb.pweb2.venus.repository.ColegiadoRepository;
 import br.edu.ifpb.pweb2.venus.repository.ProcessoRepository;
 import br.edu.ifpb.pweb2.venus.repository.ProfessorRepository;
@@ -35,11 +41,19 @@ public class CoordenadorService {
     @Autowired
     private ProfessorRepository professorRepository;
 
-    // @Autowired
+    @Autowired
+    private AssuntoRepository assuntoRepository;
+
+    @Autowired
+    private AlunoRepository alunoRepository;
     // private StatusReuniao statusReuniao;
 
     public List<Reuniao> listReunioes() {
         return reuniaoRepository.findAll();
+    }
+
+    public Page<Reuniao> listReunioes(Pageable p) {
+        return reuniaoRepository.findAll(p);
     }
 
     @Transactional
@@ -66,6 +80,10 @@ public class CoordenadorService {
         return processoRepository.findAll();
     }
 
+    public Page<Processo> listProcessos(Pageable p) {
+        return processoRepository.findAll(p);
+    }
+
     public Processo getProcesso(Integer processoId) {
         return processoRepository.findById(processoId).get();
     }
@@ -82,13 +100,22 @@ public class CoordenadorService {
     }
 
     @Transactional
-    public void saveProcesso(Processo processo, Professor relator) {
-        processo = processoRepository.findById(processo.getId()).get();
-        relator = professorRepository.findByLogin(relator.getLogin());
-        processo.setRelator(relator);
+    public void saveProcesso(Processo processo) {
+
+        Professor professor = professorRepository.findById(processo.getRelator().getId()).get();
+        Assunto assunto = assuntoRepository.findById(processo.getAssunto().getId()).get();
+        Aluno aluno = alunoRepository.findById(processo.getParticipante().getId()).get();
+
+        processo.setRelator(professor);
+        processo.setAssunto(assunto);
+        processo.setParticipante(aluno);
+
+        processo.setTexto(processo.getTexto());
+
         processo.setDataDistribuicao(new Date());
         // processo.setRelator(processo.getRelator());
         processo.setStatus(StatusEnum.DISTRIBUIDO);
+        // Processo processo2 = processoRepository.findById(processo.getId()).get();
         processoRepository.save(processo);
     }
 

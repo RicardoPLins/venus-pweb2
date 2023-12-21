@@ -4,6 +4,9 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -23,7 +27,8 @@ import br.edu.ifpb.pweb2.venus.repository.ReuniaoRepository;
 import br.edu.ifpb.pweb2.venus.service.AdminService;
 import br.edu.ifpb.pweb2.venus.service.CoordenadorService;
 import br.edu.ifpb.pweb2.venus.service.ProfessorService;
-import jakarta.servlet.http.HttpSession;
+import br.edu.ifpb.pweb2.venus.ui.NavPage;
+import br.edu.ifpb.pweb2.venus.ui.NavePageBuilder;
 import jakarta.validation.Valid;
 
 @Controller
@@ -48,7 +53,7 @@ public class ProfessorController {
     public ModelAndView saveProfessor(@Valid Processo processo, Principal principal, BindingResult result, ModelAndView mav){
         if (result.hasErrors()){
             mav.setViewName("professores/formProcessoProf");
-            mav.addObject("processo", processo);
+            // mav.addObject("processo", processo);
             return mav;
         }
         professorService.vote(processo);
@@ -60,11 +65,25 @@ public class ProfessorController {
 
 
     @GetMapping("/processos")
-    public ModelAndView processos(ModelAndView mav, Principal principal) {
-        mav.setViewName("professores/listProcessosProf");
-        mav.addObject("processos", professorService.listProcessosDesignados(principal));
-        return mav;
+    public ModelAndView processos(ModelAndView mav, @RequestParam(defaultValue = "1") int page,
+        @RequestParam(defaultValue = "4") int size) {
+    Pageable paging = PageRequest.of(page - 1, size);
+    Page<Processo> pageProcessos = professorService.listProcessos(paging);
+    NavPage navPage = NavePageBuilder.newNavPage(pageProcessos.getNumber() + 1,
+            pageProcessos.getTotalElements(), pageProcessos.getTotalPages(), size);
+    mav.setViewName("professores/listProcessosProf");
+    mav.addObject("processos", pageProcessos);
+    mav.addObject("navPage", navPage);
+    return mav;
     }
+
+
+    // public ModelAndView processos(ModelAndView mav, Principal principal) {
+    //     mav.setViewName("professores/listProcessosProf");
+    //     mav.addObject("processos", professorService.listProcessosDesignados(principal));
+    //     return mav;
+    // }
+
 
     @GetMapping("/processos/{id}")
     public ModelAndView editProfessor(@PathVariable(value = "id") Integer id, ModelAndView mav, RedirectAttributes attr) {
@@ -80,10 +99,16 @@ public class ProfessorController {
     }
 
     @GetMapping("/reunioes")
-    public ModelAndView getProcessos(ModelAndView mav, Principal principal) {
-        mav.setViewName("professores/listReuniao");
-        mav.addObject("reunioes", coordenadorService.listReunioes());
-        return mav;
+    public ModelAndView getReunioes(ModelAndView mav, @RequestParam(defaultValue = "1") int page,
+        @RequestParam(defaultValue = "2") int size) {
+    Pageable paging = PageRequest.of(page - 1, size);
+    Page<Reuniao> pageReunioes = coordenadorService.listReunioes(paging);
+    NavPage navPage = NavePageBuilder.newNavPage(pageReunioes.getNumber() + 1,
+            pageReunioes.getTotalElements(), pageReunioes.getTotalPages(), size);
+    mav.setViewName("professores/listReuniao");
+    mav.addObject("reunioes", pageReunioes);
+    mav.addObject("navPage", navPage);
+    return mav;
     }
 
         
