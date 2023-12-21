@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout_coordenador}" th:with="titulo='Cadastro de Reunião'">
+<head>
+    <title th:text="${titulo}">Cadastro de Reunião</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div layout:fragment="content">
+        <form class="form-inline" th:action="@{/coordenador/reunioes}" method="POST" th:object="${reuniao}">
+            <input type="hidden" th:field="*{id}" />
+
+            <div class="form-group mx-sm-3 mb-2">
+                <label for="data">Data</label>
+                <input type="date" th:field="*{dataReuniao}" class="form-control mb-2" />
+                <p th:if="${#fields.hasErrors('dataReuniao')}" th:errorclass="error" th:errors="*{dataReuniao}" class="alert alert-danger" />
+            </div>
+
+            <div class="form-group">
+                <label>Processos:</label>
+                <div th:each="proc : ${processos}">
+                    <div class="form-check">
+                        <input type="checkbox" th:field="*{processos}" th:value="${proc.id}" class="form-check-input" id="${'processo_' + proc.id}">
+                        <label class="form-check-label" th:for="${'processo_' + proc.id}" th:text="${proc.texto}"></label>
+                    </div>
+                </div>
+                <small class="form-text text-danger" th:if="${#fields.hasErrors('processos')}" th:errorclass="error" th:errors="*{processos}"></small>
+            </div>
+            
+
+               
+            
+            <div class="form-group mx-sm-3 mb-2">
+                <input type="submit" value="Salvar" class="btn btn-primary" />
+                <a class="btn btn-secondary" th:href="@{/coordenador/reunioes}">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

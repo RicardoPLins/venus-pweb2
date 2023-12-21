@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout_professor}" th:with="titulo='Voto de Processo'">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <title>Processos</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+
+    <div class="container">
+        <div class="header">
+            <div class="icon">
+                <a th:href="@{/professores/processos}"><i class="fas fa-arrow-left"></i></a>
+            </div>
+            <h1>Processos</h1>
+        </div>
+
+        <div class="tabela">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Numero</th>
+                        <th>Assunto</th>
+                        <th>Status</th>
+                        <th>Documento</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="processo : ${processos}" th:object="${processo}">
+                        <td th:text="${processo.numero}"></td>
+                        <td th:text="${processo.assunto.nome}"></td>
+                        <td th:text="${processo.decisaoRelator}"></td>
+                        <td>
+                            <span th:if="${processo.parecer == 0}">Sem documentos</span>
+                            <a th:unless="${processo.parecer == 0}" href="#">Documento</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}"
+    th:with="titulo='Cursos'">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+ 
+  <title>Admin</title>
+</head>
+<body>
+  <div id="cabecalho">
+    <div></div>
+    <div><h3>CURSOS</h3></div>
+    <div></div>
+  </div>
+
+  <div layout:fragment="content">
+    <form th:action="@{/admin/cursos/cadastro}" method="GET">
+      <button class="btn btn-primary" type="submit">Novo Curso</button>
+  </form>
+
+    <div id="main">
+        <div>
+          <h2>CURSOS</h2>
+          <table class="table" id="tabela">
+            <thead>
+              <tr>
+                <th scope="col">Nome</th>
+                <th scope="col">Alterar</th>
+                <th scope="col">Excluir</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="curso : ${cursos}">
+                <td th:text="${curso.nome}" scope="row"></td>
+                <td>
+                  <a th:href="@{/admin/cursos/{id}(id=${curso.id})}" class="btn btn-warning" data-id="[[${curso.id}]]">
+                    <i class="fas fa-pencil-square-o"></i>
+                </a>
+                </td>
+                <td>
+                  <form th:action="@{/admin/cursos/{id}/delete(id=${curso.id})}">
+                      <button class="btn btn-primary btn-sm" type="submit">Excluir</button>
+                  </form>
+              </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+  </div>
+</body>
+</html>

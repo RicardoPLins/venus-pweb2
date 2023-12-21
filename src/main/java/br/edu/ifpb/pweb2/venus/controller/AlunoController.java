@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.edu.ifpb.pweb2.venus.model.Assunto;
 import br.edu.ifpb.pweb2.venus.model.Processo;
@@ -45,7 +46,7 @@ public class AlunoController {
         return mav;
     }
 
-    @ModelAttribute("assuntoItems")
+    @ModelAttribute("assuntos")
     public List<Assunto> getAssuntos() {
         return alunoService.listAssunto();
     }
@@ -82,12 +83,13 @@ public class AlunoController {
         return mav;
     }
 
-//     @GetMapping("/processos")
-//     public String processos(Model model) {
-//     List<Processo> processos = processoService.listProcessos();
-//     model.addAttribute("processos", processos);
-//     return "professores/listProcessosProf";
-// }
+    @GetMapping("/processos/{id}/delete")
+    public ModelAndView deleteProcesso(@PathVariable(value = "id") Integer id, ModelAndView mav, RedirectAttributes attr) {
+        alunoService.removerProcesso(id);
+        attr.addFlashAttribute("mensagem", "Processo removido com sucesso!");
+        mav.setViewName("redirect:/alunos/processos");
+        return mav;
+    }
 
 @RequestMapping("/processos/qm")
 public String queryMethods(String tipo, Integer assuntoId, Model model) {

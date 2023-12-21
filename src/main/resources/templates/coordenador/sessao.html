@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout_coordenador}" th:with="titulo='Sessão'">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+ 
+  <title>Coordenador</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+  <div class="container">
+    <form th:action="@{/coordenador/reunioes/cadastro}" method="GET">
+      
+    </form>
+    <br>
+
+    <div id="main">
+        <div>
+          <h2>Sessão</h2>
+          <br>
+          <form action="/coordenador/reunioes/{id}/encerrarSessao(id=${reuniao.id})" method="POST">
+          <button class="btn btn-primary" type="submit">Encerrar Sessão</button>
+            </form>
+          <br>
+          <table class="table" id="tabela">
+            <thead>
+              <tr>
+                <th scope="col">Processo</th>
+                <th scope="col">Assunto</th>
+                <th scope="col">Relator</th>
+                <th scope="col">Decisão do Relator</th>
+                <th scope="col">Votar</th>
+                <th scope="col">Excluir</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="processo : ${processos}">
+                <td th:text="${processo.numero}" scope="row"></td>
+                <td th:text="${processo.assunto.nome}" scope="row"></td>
+                <td th:text="${processo.relator?.nome}" scope="row"></td>
+                <td th:text="${processo.decisaoRelator}" scope="row"></td>
+                <!-- <td>
+                  <ul>
+                    <li th:each="processo : ${reuniao.processos}" th:text="${processo.texto}"></li>
+                  </ul>
+              </td> -->
+                <td>
+                  <form th:action="@{/coordenador/reunioes/{id}/votarSessao(id=${processo.id})}">
+                    <button class="btn btn-secondary" type="submit">Votar</button>
+                  </form>
+                <td>
+                  <form th:action="@{/coordenador/reunioes/{id}/delete(id=${processo.id})}">
+                    <button class="btn btn-primary btn-sm" type="submit">Excluir</button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+    </div>
+  </div>
+</body>
+</html>

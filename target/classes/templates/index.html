@@ -1,0 +1,39 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}" th:with="titulo='Home'">
+
+<body>
+    <div layout:fragment="content">
+
+        <h2>Vênus</h2>
+
+        <p>Este é o Vênus, o seu app de colegiado muito mais fácil e rápido.</p>
+
+        <div>Como administrador, você poderá:</div>
+        <ul>
+            <li>Realizar CRUDs para colegiados<strong>Colegiados</strong></li>
+            <li>Realizar CRUDs para alunos <strong>Alunos</strong></li>
+            <li>Realizar CRUDs para professores <strong>Professores</strong></li>
+            <li>Realizar CRUDs para coordenadores <strong>Coordenadores</strong></li>
+            <li>Realizar CRUDs para assuntos de processos <strong>Processos</strong></li>
+        </ul>
+
+        <div>Como aluno, você poderá realizar operações no colegiado:</div>
+        <ul>
+            <li>Cadastrar um novo processo</li>
+            <li>Consultar o estado dos processos</li>
+        </ul>
+    </div>
+
+    <div>Como professor, você poderá realizar operações no colegiado:</div>
+        <ul>
+            <li>Consultar os processos</li>
+        </ul>
+    </div>
+    <div>Como coordenador, você poderá realizar operações no colegiado:</div>
+        <ul>
+            <li></li>
+            <li>Consultar o estado dos processos</li>
+        </ul>
+    </div>
+</body>
+
+</html>

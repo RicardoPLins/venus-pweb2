@@ -12,17 +12,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.edu.ifpb.pweb2.venus.model.Curso;
 import br.edu.ifpb.pweb2.venus.model.Processo;
-import br.edu.ifpb.pweb2.venus.model.StatusReuniao;
-import br.edu.ifpb.pweb2.venus.model.Voto;
 import br.edu.ifpb.pweb2.venus.model.Reuniao;
+import br.edu.ifpb.pweb2.venus.model.StatusReuniao;
 import br.edu.ifpb.pweb2.venus.repository.ReuniaoRepository;
 import br.edu.ifpb.pweb2.venus.service.AdminService;
+import br.edu.ifpb.pweb2.venus.service.CoordenadorService;
 import br.edu.ifpb.pweb2.venus.service.ProfessorService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
@@ -36,13 +35,17 @@ public class ProfessorController {
       
     @Autowired
     private ProfessorService professorService;  
+
+    
+    @Autowired
+    private CoordenadorService coordenadorService;  
     
     @Autowired
     private ReuniaoRepository reuniaoRepository;  
     
 
     @PostMapping("/processos")
-    public ModelAndView saveProfessor(@Valid Processo processo, BindingResult result, ModelAndView mav){
+    public ModelAndView saveProfessor(@Valid Processo processo, Principal principal, BindingResult result, ModelAndView mav){
         if (result.hasErrors()){
             mav.setViewName("professores/formProcessoProf");
             mav.addObject("processo", processo);
@@ -52,7 +55,6 @@ public class ProfessorController {
         // attr.addFlashAttribute("mensagem", "Voto feito com sucesso!");
         mav.setViewName("redirect:/professores/processos");
         // mav.setViewName("redirect:professores/listProcessosProf");
-        mav.addObject("processos", professorService.listProcessos());
         return mav;
     }
 
@@ -77,6 +79,13 @@ public class ProfessorController {
         return adminService.listarCursos();
     }
 
+    @GetMapping("/reunioes")
+    public ModelAndView getProcessos(ModelAndView mav, Principal principal) {
+        mav.setViewName("professores/listReuniao");
+        mav.addObject("reunioes", coordenadorService.listReunioes());
+        return mav;
+    }
+
         
     // @RequestMapping("/reunioes/qm")
     // public String queryMethods(String tipo, Integer reuniaoId, Model model) {
@@ -98,24 +107,32 @@ public class ProfessorController {
 
 
 
-    @GetMapping("/reunioes")
-    public String listarReunioesDoColegiado(@RequestParam(value = "status", required = false) String status,
-                                            Model model) {
-        List<Reuniao> reunioes;
-
-        // Verifica se foi fornecido um status para filtrar
-        if (status != null && !status.isEmpty()) {
-            StatusReuniao statusReuniao = StatusReuniao.valueOf(status.toUpperCase());
-            reunioes = reuniaoRepository.findByStatus(statusReuniao);
+    @RequestMapping("/reunioes/qm")
+    public String queryReunioes(String tipo, String status, Model model) {
+        List<Reuniao> reunioes = null;
+        
+        if ("findByStatus".equals(tipo) && status != null && !status.isEmpty()) {
+            switch (status.toLowerCase()) {
+                case "programada":
+                case "encerrada":
+                    reunioes = reuniaoRepository.findByStatus(StatusReuniao.valueOf(status.toUpperCase()));
+                    break;
+                // Outros casos de consulta, se necessário
+                default:
+                    break;
+            }
         } else {
-            reunioes = reuniaoRepository.findAll(); // Retorna todas as reuniões se não houver status fornecido
+            // Lógica para outras consultas ou para exibir todas as reuniões
+            reunioes = reuniaoRepository.findAll();
         }
+        
         model.addAttribute("reunioes", reunioes);
-        return "professores/listReuniao";
+        return "professores/listReuniao"; // Substitua pelo nome correto da sua página
     }
 
+
         
-    @ModelAttribute("statusItens")
+    @ModelAttribute("status")
         public List<StatusReuniao> getStatus() {
             return List.of(StatusReuniao.values());
         }

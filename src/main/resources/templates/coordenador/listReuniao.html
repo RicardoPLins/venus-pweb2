@@ -27,7 +27,7 @@
                 <th scope="col">Data</th>
                 <th scope="col">Status</th>
                 <th scope="col">Pauta</th>
-                <th scope="col">Alterar</th>
+                <th scope="col">Iniciar Sessão</th>
                 <th scope="col">Excluir</th>
               </tr>
             </thead>
@@ -36,13 +36,14 @@
                 <td th:text="${reuniao.dataReuniao}" scope="row"></td>
                 <td th:text="${reuniao.status}" scope="row"></td>
                 <td>
-                  <span th:each="processo : ${reuniao.processos}" th:text="${processo.texto}"></span>
+                  <ul>
+                    <li th:each="processo : ${reuniao.processos}" th:text="${processo.texto}"></li>
+                  </ul>
               </td>
                 <td>
-                  <a th:href="@{/coordenador/reunioes/{id}(id=${reuniao.id})}" class="btn btn-warning" data-id="[[${reuniao.id}]]">
-                    <i class="fas fa-pencil-square-o"></i>
-                  </a>
-                </td>
+                  <form th:action="@{/coordenador/reunioes/{id}/iniciarSessao(id=${reuniao.id})}">
+                    <button class="btn btn-secondary" type="submit">Iniciar Sessão</button>
+                  </form>
                 <td>
                   <form th:action="@{/coordenador/reunioes/{id}/delete(id=${reuniao.id})}">
                     <button class="btn btn-primary btn-sm" type="submit">Excluir</button>

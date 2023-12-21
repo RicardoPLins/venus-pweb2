@@ -14,6 +14,7 @@ import br.edu.ifpb.pweb2.venus.model.Processo;
 import br.edu.ifpb.pweb2.venus.model.Professor;
 import br.edu.ifpb.pweb2.venus.model.Reuniao;
 import br.edu.ifpb.pweb2.venus.model.StatusEnum;
+import br.edu.ifpb.pweb2.venus.model.StatusReuniao;
 import br.edu.ifpb.pweb2.venus.repository.ColegiadoRepository;
 import br.edu.ifpb.pweb2.venus.repository.ProcessoRepository;
 import br.edu.ifpb.pweb2.venus.repository.ProfessorRepository;
@@ -47,17 +48,10 @@ public class CoordenadorService {
     }
 
     @Transactional
-    public void saveReuniao(Reuniao reuniao) {
-        Reuniao r = reuniaoRepository.findById(reuniao.getId()).get();
-        if (r!= null){
-            r.setStatus(reuniao.getStatus());
-            r.setProcessos(reuniao.getProcessos());
-            reuniaoRepository.save(reuniao);
-        }
-        else{
-            throw new RuntimeException("Reuniao não encontrada" + reuniao.getId());
-        }
-        
+    public void saveReuniao(Reuniao reuniao, Principal principal) {
+        reuniao.setStatus(StatusReuniao.PROGRAMADA);
+        reuniao.setColegiado(colegiadoRepository.findByCursoId(professorRepository.findByLogin(principal.getName()).getCurso().getId()));
+        reuniaoRepository.save(reuniao);   
     }
 
     public Optional<Reuniao> getReuniao(Integer id) {
@@ -68,7 +62,7 @@ public class CoordenadorService {
     //     return statusReuniao.findAll();
     // }
 
-    public List<Processo> listProcessos(){
+    public List<Processo> listProcessos(Principal user){
         return processoRepository.findAll();
     }
 
@@ -83,15 +77,35 @@ public class CoordenadorService {
 
     }
 
+    public List<Colegiado> listColegiado(Principal user) {
+        return colegiadoRepository.findByMembrosId(professorRepository.findByLogin(user.getName()).getId());
+    }
+
     @Transactional
-    public void saveProcesso(Processo processo, String login) {
+    public void saveProcesso(Processo processo, Professor relator) {
         processo = processoRepository.findById(processo.getId()).get();
-        Professor relator = professorRepository.findByLogin(login);
+        relator = professorRepository.findByLogin(relator.getLogin());
         processo.setRelator(relator);
         processo.setDataDistribuicao(new Date());
         // processo.setRelator(processo.getRelator());
         processo.setStatus(StatusEnum.DISTRIBUIDO);
         processoRepository.save(processo);
+    }
+
+    @Transactional
+    public void iniciarSessao(Integer id) {
+        Reuniao reuniao = reuniaoRepository.findById(id).get();
+        reuniaoRepository.save(reuniao);
+    }
+
+    public void encerrarSessao(Integer id) {
+        Reuniao reuniao = reuniaoRepository.findById(id).get();
+        reuniao.setStatus(StatusReuniao.ENCERRADA);
+        reuniaoRepository.save(reuniao);
+    }
+
+    public List<Processo> listProcessosPautas(Integer id) {
+        return null;
     }
 
     

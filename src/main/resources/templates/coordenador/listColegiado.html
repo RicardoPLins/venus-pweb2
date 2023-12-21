@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout_coordenador}" th:with="titulo='Listagem de Colegiados'">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+ 
+  <title>Coordenador</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+  <div class="container">
+    <form th:action="@{/coordenador/colegiados/cadastro}" method="GET">
+      <button class="btn btn-primary" type="submit">Novo Colegiado</button>
+    </form>
+    <br>
+
+    <div id="main">
+        <div>
+          <h2>Colegiados</h2>
+          <table class="table" id="tabela">
+            <thead>
+              <tr>
+                <th scope="col">Data Início</th>
+                <th scope="col">Descrição</th>
+                <th scope="col">Portaria</th>
+                <th scope="col">Curso</th>
+                <th scope="col">Membros</th>
+                <th scope="col">Iniciar Sessão</th>
+                <th scope="col">Excluir</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="colegiado : ${colegiados}">
+                <td th:text="${colegiado.dataInicio}" scope="row"></td>
+                <td th:text="${colegiado.descricao}" scope="row"></td>
+                <td th:text="${colegiado.portaria}" scope="row"></td>
+                <td th:text="${colegiado.curso.nome}" scope="row"></td>
+                <td>
+                    <ul>
+                        <li th:each="professor : ${colegiado.membros}" th:text="${professor.nome}"></li>
+                    </ul>
+              </td>
+              <td>
+                  <form th:action="@{/coordenador/colegiados/{id}/iniciarSessao(id=${colegiado.id})}">
+                    <button class="btn btn-secondary" type="submit">Iniciar Sessão</button>
+                  </form>
+                <td>
+                  <form th:action="@{/coordenador/colegiados/{id}/delete(id=${colegiado.id})}">
+                    <button class="btn btn-primary btn-sm" type="submit">Excluir</button>
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+    </div>
+    </div>
+  </div>
+</body>
+</html>

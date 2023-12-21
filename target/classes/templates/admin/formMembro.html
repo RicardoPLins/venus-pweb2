@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}"
+    th:with="titulo='Colegiados'"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/js/all.min.js"></script>
+</head>
+<body>
+  <div class="container">
+
+    <div layout:fragment="content">
+
+    <div id="main">
+        <div>
+          <h2>ADICIONAR MEMBROS</h2>
+          <table class="table" id="tabela">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Curso</th>
+                <th>Add</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="professor : ${professores}">
+                <th scope="row" th:text="${professor.nome}"> </th>
+                <td th:text="${professor.curso.nome}" scope="row"> </td>
+
+                <td>
+                  <form th:action="@{/admin/colegiados/membros}" method="post">
+                    <input type="hidden" th:value="${colegiadoId}" name="idColegiado">
+                    <input type="hidden" th:value="${professor.id}" name="idProfessor">
+                    <button class="btn btn-primary" type="submit">Adicionar</button> 
+                  </form>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <a class="btn btn-secondary" th:href="@{'/admin/colegiados'}">Cancelar</a>
+        </div>
+    </div>
+  </div>
+    </body>
+</html>
