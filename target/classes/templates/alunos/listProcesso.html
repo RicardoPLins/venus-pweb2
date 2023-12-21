@@ -76,6 +76,8 @@
                     </tr>
                 </tbody>
             </table>
+
+            <div th:replace="~{/fragments/paging :: paginator('alunos/processos', ${navPage})}" />
         </div>
     </div>
 </body>

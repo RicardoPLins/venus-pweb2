@@ -13,20 +13,23 @@
 
 <body>
     <div layout:fragment="content">
-        <div class="header">
-            <h1>Processos</h1>
+        <div class="container">
+            <form action="/professores/processos"></form>
+
         </div>
 
-        <div class="tabela">
-            <table class="table table-striped">
+
+        <div id="main">
+            <h1>Processos</h1>
+            <table class="table" id="tabela">
                 <thead>
                     <tr>
-                        <th>Numero</th>
-                        <th>Votar</th>
-                        <th>Assunto</th>
-                        <th>Voto</th>
-                        <th>Justificativa</th>
-                        <th>Documento</th>
+                        <th scope="col">Numero</th>
+                        <th scope="col">Votar</th>
+                        <th scope="col">Assunto</th>
+                        <th scope="col">Voto</th>
+                        <th scope="col">Justificativa</th>
+                        <th scope="col">Documento</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -47,7 +50,10 @@
                     </tr>
                 </tbody>
             </table>
+
+            <div th:replace="~{/fragments/paging :: paginator('professores/processos', ${navPage})}" />
         </div>
     </div>
+</div>
 </body>
 </html>

@@ -17,11 +17,12 @@
           <label for="numeroProcesso">Número do processo:</label>
           <input type="text"  th:field="*{numero}" id="numeroProcesso" class="form-control">
           
-          <label for="prof_relator">Professor Relator:</label>
-          <select class="form-select" id="prof_relator" th:field="*{prof_relator.id}" required>
-            <option th:each="prof_relator : ${relatorItens}" th:value="${prof_relator.id}" th:text="${prof_relator.nome}"></option>
+          <label for="relator">Professor Relator:</label>
+          <select class="form-select" id="relator" th:field="*{relator.id}" required>
+            <option th:each="relator : ${relatorItens}" th:value="${relator.id}" th:text="${relator.nome}"></option>
           </select>
 
+          <br>
           <button type="submit" class="btn btn-secondary">Adicionar</button>
         </form>
     </div>

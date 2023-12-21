@@ -27,20 +27,25 @@
                 <th scope="col">Aluno</th>
                 <th scope="col">Assunto</th>
                 <th scope="col">Status</th>
-                <th scope="col">Professor Relator</th>
+                <th scope="col">Adicionar Relator</th>
               </tr>
             </thead>
             <tbody>
               <tr th:each="processo : ${processos}">
                 <th th:text="${processo.numero}"></th>
-                <td th:text="${processo.participante.nome}"></td>
-                <td th:text="${processo.assunto.nome}"></td>
+                <td th:if="${processo.participante != null}" th:text="${processo.participante.nome}"></td>
+                <td th:unless="${processo.participante != null}">Participante não especificado</td>
+                <td th:if="${processo.assunto != null}" th:text="${processo.assunto.nome}"></td>
+                <td th:unless="${processo.assunto != null}">Assunto não especificado</td>
+
                 <td th:text="${processo.status}"></td>
-                <td th:if="${processo.prof_relator == null}"> <a class="btn btn-primary" th:href="@{/coordenador/processos/{processoId}/relator(processoId=${processo.id})}"> Adicionar relator </a> </td>
-                <td th:unless="${processo.prof_relator == null}" th:text="${processo.prof_relator.nome}"> </td>
+                <td th:if="${processo.relator == null}"> <a class="btn btn-primary" th:href="@{/coordenador/processos/{processoId}/relator(processoId=${processo.id})}"> Adicionar relator </a> </td>
+                <td th:unless="${processo.relator == null}" th:text="${processo.relator.nome}"> </td>
               </tr>
             </tbody>
           </table>
+
+          <div th:replace="~{/fragments/paging :: paginator('coordenador/processos', ${navPage})}" />
         </div>
     </div>
   </div>

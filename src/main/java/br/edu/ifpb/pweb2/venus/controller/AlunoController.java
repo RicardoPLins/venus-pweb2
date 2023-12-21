@@ -4,6 +4,9 @@ import java.security.Principal;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -23,6 +27,8 @@ import br.edu.ifpb.pweb2.venus.model.Processo;
 import br.edu.ifpb.pweb2.venus.repository.AssuntoRepository;
 import br.edu.ifpb.pweb2.venus.repository.ProcessoRepository;
 import br.edu.ifpb.pweb2.venus.service.AlunoService;
+import br.edu.ifpb.pweb2.venus.ui.NavPage;
+import br.edu.ifpb.pweb2.venus.ui.NavePageBuilder;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
@@ -40,10 +46,16 @@ public class AlunoController {
     private AssuntoRepository assuntoRepository;
 
     @GetMapping("/processos")
-    public ModelAndView getProcessos(ModelAndView mav, Principal principal) {
-        mav.setViewName("alunos/listProcesso");
-        mav.addObject("processos", alunoService.consultaProcessos(principal));
-        return mav;
+    public ModelAndView processos(ModelAndView mav, @RequestParam(defaultValue = "1") int page,
+        @RequestParam(defaultValue = "4") int size) {
+    Pageable paging = PageRequest.of(page - 1, size);
+    Page<Processo> pageProcessos = alunoService.listProcessos(paging);
+    NavPage navPage = NavePageBuilder.newNavPage(pageProcessos.getNumber() + 1,
+            pageProcessos.getTotalElements(), pageProcessos.getTotalPages(), size);
+    mav.setViewName("alunos/listProcesso");
+    mav.addObject("processos", pageProcessos);
+    mav.addObject("navPage", navPage);
+    return mav;
     }
 
     @ModelAttribute("assuntos")
@@ -109,5 +121,11 @@ public String queryMethods(String tipo, Integer assuntoId, Model model) {
     return "alunos/listProcesso";
 }
 
+// @GetMapping("/reunioes")
+// public ModelAndView getColegiado(ModelAndView mav, Principal principal) {
+//     mav.setViewName("coordenador/listReuniao");
+//     mav.addObject("reunioes", coordenadorService(principal));
+//     return mav;
+// }
 
 }
