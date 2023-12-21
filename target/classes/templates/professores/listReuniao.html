@@ -46,14 +46,12 @@
                     <tr th:each="reuniao : ${reunioes}">
                         <td th:text="${reuniao.dataReuniao}" scope="row"></td>
                         <td th:text="${reuniao.status}" scope="row"></td>
-                        <!-- Aqui, talvez seja necessário percorrer os processos da reunião -->
                         <td>
                             <ul>
                                 <li th:each="processo : ${reuniao.processos}" th:text="${processo.texto}"></li>
                             </ul>
                         </td>
                     </tr>
-                    <!-- Fim da iteração das reuniões -->
                 </tbody>
             </table>
         </div>
