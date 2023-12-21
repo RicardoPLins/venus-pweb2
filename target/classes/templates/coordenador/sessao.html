@@ -38,6 +38,7 @@
               </tr>
             </thead>
             <tbody>
+              <!-- <tr th:each="reuniao : ${reunioes}"> -->
               <tr th:each="processo : ${processos}">
                 <td th:text="${processo.numero}" scope="row"></td>
                 <td th:text="${processo.assunto.nome}" scope="row"></td>
@@ -58,6 +59,7 @@
                   </form>
                 </td>
               </tr>
+            <!-- </tr> -->
             </tbody>
           </table>
         </div>

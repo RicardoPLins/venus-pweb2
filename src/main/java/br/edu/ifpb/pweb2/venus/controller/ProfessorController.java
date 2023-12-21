@@ -50,7 +50,7 @@ public class ProfessorController {
     
 
     @PostMapping("/processos")
-    public ModelAndView saveProfessor(@Valid Processo processo, Principal principal, BindingResult result, ModelAndView mav){
+    public ModelAndView saveProfessor(@Valid Processo processo, BindingResult result, ModelAndView mav){
         if (result.hasErrors()){
             mav.setViewName("professores/formProcessoProf");
             // mav.addObject("processo", processo);
@@ -60,6 +60,7 @@ public class ProfessorController {
         // attr.addFlashAttribute("mensagem", "Voto feito com sucesso!");
         mav.setViewName("redirect:/professores/processos");
         // mav.setViewName("redirect:professores/listProcessosProf");
+        mav.addObject("processos", professorService.listProcessos());
         return mav;
     }
 
@@ -76,11 +77,11 @@ public class ProfessorController {
     mav.addObject("navPage", navPage);
     return mav;
     }
-
-
-    // public ModelAndView processos(ModelAndView mav, Principal principal) {
-    //     mav.setViewName("professores/listProcessosProf");
-    //     mav.addObject("processos", professorService.listProcessosDesignados(principal));
+    
+    // @GetMapping("/processos")
+    // public ModelAndView reunioes(ModelAndView mav) {
+    //     mav.setViewName("professores/listReuniao");
+    //     mav.addObject("processos", coordenadorService.listReunioes());
     //     return mav;
     // }
 
@@ -98,20 +99,27 @@ public class ProfessorController {
         return adminService.listarCursos();
     }
 
-    @GetMapping("/reunioes")
-    public ModelAndView getReunioes(ModelAndView mav, @RequestParam(defaultValue = "1") int page,
-        @RequestParam(defaultValue = "2") int size) {
-    Pageable paging = PageRequest.of(page - 1, size);
-    Page<Reuniao> pageReunioes = coordenadorService.listReunioes(paging);
-    NavPage navPage = NavePageBuilder.newNavPage(pageReunioes.getNumber() + 1,
-            pageReunioes.getTotalElements(), pageReunioes.getTotalPages(), size);
-    mav.setViewName("professores/listReuniao");
-    mav.addObject("reunioes", pageReunioes);
-    mav.addObject("navPage", navPage);
-    return mav;
+    // @GetMapping("/reunioes")
+    // public ModelAndView getReunioes(ModelAndView mav, @RequestParam(defaultValue = "1") int page,
+    //     @RequestParam(defaultValue = "2") int size) {
+    // Pageable paging = PageRequest.of(page - 1, size);
+    // Page<Reuniao> pageReunioes = coordenadorService.listReunioes(paging);
+    // NavPage navPage = NavePageBuilder.newNavPage(pageReunioes.getNumber() + 1,
+    //         pageReunioes.getTotalElements(), pageReunioes.getTotalPages(), size);
+    // mav.setViewName("coordenador/listReuniao");
+    // mav.addObject("reunioes", pageReunioes);
+    // mav.addObject("navPage", navPage);
+    // return mav;
+    // }
+        
+       @GetMapping("/reunioes")
+    public ModelAndView getProcessos(ModelAndView mav, Principal principal) {
+        mav.setViewName("professores/listReuniao");
+        mav.addObject("reunioes", coordenadorService.listReunioes());
+        return mav;
     }
 
-        
+
     // @RequestMapping("/reunioes/qm")
     // public String queryMethods(String tipo, Integer reuniaoId, Model model) {
     //     List<Reuniao> reunioes = null;
@@ -135,7 +143,7 @@ public class ProfessorController {
     @RequestMapping("/reunioes/qm")
     public String queryReunioes(String tipo, String status, Model model) {
         List<Reuniao> reunioes = null;
-        
+
         if ("findByStatus".equals(tipo) && status != null && !status.isEmpty()) {
             switch (status.toLowerCase()) {
                 case "programada":
@@ -150,17 +158,16 @@ public class ProfessorController {
             // Lógica para outras consultas ou para exibir todas as reuniões
             reunioes = reuniaoRepository.findAll();
         }
-        
+
         model.addAttribute("reunioes", reunioes);
         return "professores/listReuniao"; // Substitua pelo nome correto da sua página
     }
 
 
-        
+
     @ModelAttribute("status")
         public List<StatusReuniao> getStatus() {
             return List.of(StatusReuniao.values());
         }
-    
-}
 
+}

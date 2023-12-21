@@ -90,12 +90,19 @@ public class CoordenadorController {
         return adminService.listarProfessores();
     }
 
+    // @GetMapping("/reunioes")
+    // public ModelAndView getProcessos(ModelAndView mav, Principal principal) {
+    //     mav.setViewName("coordenador/listReuniao");
+    //     mav.addObject("reunioes", coordenadorService.listReunioes());
+    //     return mav;
+    // }
+
 
     @GetMapping("/reunioes")
     public ModelAndView getReunioes(ModelAndView mav, @RequestParam(defaultValue = "1") int page,
         @RequestParam(defaultValue = "2") int size) {
     Pageable paging = PageRequest.of(page - 1, size);
-    Page<Reuniao> pageReunioes = coordenadorService.listReunioes(paging);
+    Page<Reuniao> pageReunioes = coordenadorService.listReunioesP(paging);
     NavPage navPage = NavePageBuilder.newNavPage(pageReunioes.getNumber() + 1,
             pageReunioes.getTotalElements(), pageReunioes.getTotalPages(), size);
     mav.setViewName("coordenador/listReuniao");
@@ -145,7 +152,11 @@ public class CoordenadorController {
             return List.of(StatusReuniao.values());
         }
 
-
+    // @ModelAttribute("processosReuniao")
+    // public List<Processo> processosR(@PathVariable(value = "id") Integer id) {
+    //     return coordenadorService.getProcesosReuniao(id);
+    // }
+    
     @ModelAttribute("processos")
     public List<Processo> getProcessos(Principal principal) {
         return coordenadorService.listProcessos(principal);
@@ -153,7 +164,12 @@ public class CoordenadorController {
 
     @GetMapping("/reunioes/{id}/iniciarSessao")
     public ModelAndView iniciarSessao(@PathVariable(value = "id") Integer id, ModelAndView mav) {
+        // if(id == null){
+        //     mav.setViewName("redirect:/coordenador/reunioes");
+        //     return mav;
+        // }
         coordenadorService.iniciarSessao(id);
+        // mav.addObject("processos", coordenadorService.getProcesosReuniao(id));
         mav.setViewName("redirect:/coordenador/reunioes/{id}/sessao");
         return mav;
     }
@@ -161,6 +177,7 @@ public class CoordenadorController {
     @GetMapping("/reunioes/{id}/sessao")
     public ModelAndView getSessao(@PathVariable(value = "id") Integer id, ModelAndView mav) {
         mav.setViewName("coordenador/sessao");
+        // mav.addObject("processos", coordenadorService.getProcesosReuniao(id));
         mav.addObject("reuniao", coordenadorService.listProcessosPautas(id));
         return mav;
     }
@@ -172,5 +189,7 @@ public class CoordenadorController {
         mav.setViewName("redirect:/coordenador/reunioes");
         return mav;
     }
+
+
     
 }

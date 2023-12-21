@@ -1,6 +1,7 @@
 package br.edu.ifpb.pweb2.venus.service;
 
 import java.security.Principal;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import br.edu.ifpb.pweb2.venus.model.Aluno;
 import br.edu.ifpb.pweb2.venus.model.Assunto;
 import br.edu.ifpb.pweb2.venus.model.Colegiado;
+import br.edu.ifpb.pweb2.venus.model.Curso;
 import br.edu.ifpb.pweb2.venus.model.Processo;
 import br.edu.ifpb.pweb2.venus.model.Professor;
 import br.edu.ifpb.pweb2.venus.model.Reuniao;
@@ -51,11 +53,28 @@ public class CoordenadorService {
     public List<Reuniao> listReunioes() {
         return reuniaoRepository.findAll();
     }
+    
 
-    public Page<Reuniao> listReunioes(Pageable p) {
+    public Page<Reuniao> listReunioesP(Pageable p) {
         return reuniaoRepository.findAll(p);
     }
+    // public List<Reuniao> listReunioesPorStatus(StatusReuniao status){
+    //         return reuniaoRepository.findByStatus(status);
+    // }
 
+    // public Page<Reuniao> listarReunioesPorStatus(String status, Pageable pageable) {
+    //     return reuniaoRepository.findByStatus(status, pageable);
+    // }
+
+    // public Page<Reuniao> listarReunioesporStatus(String status, Pageable paging) {
+    //     if (status != null && !status.isEmpty()) {
+    //         return reuniaoRepository.findByStatus(StatusReuniao.valueOf(status), paging);
+    //     } else {
+    //         return listReunioes(paging);
+    //     }
+    // }
+    
+    
     @Transactional
     public void removerReuniao(Integer id) {
         reuniaoRepository.deleteById(id);
@@ -72,6 +91,18 @@ public class CoordenadorService {
         return reuniaoRepository.findById(id);
     }
 
+    public List<Processo> getProcesosReuniao(Integer id){
+        Optional<Reuniao> r = this.getReuniao(id);
+        if (r.isPresent()) {
+            Reuniao reuniao = r.get();
+            return reuniao.getProcessos();
+        } else {
+            // Lida com o caso em que a reunião não é encontrada pelo ID
+            return Collections.emptyList(); // Retorna uma lista vazia ou trata o erro de outra forma
+        }
+        
+
+    }
     // public List<StatusReuniao> listStatusReuniaos(){
     //     return statusReuniao.findAll();
     // }

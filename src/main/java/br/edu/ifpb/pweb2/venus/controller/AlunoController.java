@@ -121,5 +121,11 @@ public String queryMethods(String tipo, Integer assuntoId, Model model) {
     return "alunos/listProcesso";
 }
 
+// @GetMapping("/reunioes")
+// public ModelAndView getColegiado(ModelAndView mav, Principal principal) {
+//     mav.setViewName("coordenador/listReuniao");
+//     mav.addObject("reunioes", coordenadorService(principal));
+//     return mav;
+// }
 
 }
