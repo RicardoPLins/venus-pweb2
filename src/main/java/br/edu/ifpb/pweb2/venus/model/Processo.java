@@ -46,9 +46,9 @@ public class Processo {
 
     private TipoVoto voto;
 
-    @NotBlank(message = "Campo Obrigatório!")
+    // @NotBlank(message = "Campo Obrigatório!")
     @Size(min=5, max = 40, message = "O requerimento deve ter no min 5 e max 40")
-    private String texto;
+    private String  texto;
 
     // @NotBlank(message = "Campo Obrigatório!")
     @Size(min=5, max = 40, message = "O requerimento deve ter no min 5 e max 40")

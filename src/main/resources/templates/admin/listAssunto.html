@@ -1,5 +1,5 @@
 <html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:insert="~{layout/layout}"
-    th:with="titulo='Alunos'">
+    th:with="titulo='Assuntos'">
 
 <head>
     <meta charset="UTF-8">
@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
 </head>
-
 
 <body>
     <div layout:fragment="content">
@@ -48,6 +47,8 @@
                     </tr>
                 </tbody>
             </table>
+
+            <div th:replace="~{/fragments/paging :: paginator('admin/assuntos', ${navPage})}" />
         </div>
     </div>
     </script>

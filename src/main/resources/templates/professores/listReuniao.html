@@ -56,6 +56,9 @@
                     <!-- Fim da iteração das reuniões -->
                 </tbody>
             </table>
+
+            <div th:replace="~{/fragments/paging :: paginator('professores/reunioes', ${navPage})}" />
+
         </div>
     </div>
 </body>

@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +58,10 @@ public class AlunoService {
 
     public List<Processo> listProcesso() {
         return processoRepository.findAll();
+    }
+
+    public Page<Processo> listProcessos(Pageable p) {
+        return processoRepository.findAll(p);
     }
 
     public List<Assunto> listAssunto() {

@@ -19,7 +19,7 @@
           
           <label for="prof_relator">Professor Relator:</label>
           <select class="form-select" id="prof_relator" th:field="*{prof_relator.id}" required>
-            <option th:each="prof_relator : ${relatorItens}" th:value="${prof_relator.id}" th:text="${prof_relator.nome}"></option>
+            <option th:each="prof_relator : ${relator}" th:value="${prof_relator.id}" th:text="${prof_relator.nome}"></option>
           </select>
 
           <button type="submit" class="btn btn-secondary">Adicionar</button>

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.edu.ifpb.pweb2.venus.model.Processo;
@@ -23,6 +25,10 @@ public class ProfessorService{
 
     public List<Processo> listProcessos() {
         return processoRepository.findAll();
+    }
+
+    public Page<Processo> listProcessos(Pageable p) {
+        return processoRepository.findAll(p);
     }
 
     public Processo buscarProcesso(Integer id) {
